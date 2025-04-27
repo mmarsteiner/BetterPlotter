@@ -9,16 +9,21 @@
 
 int main() {
     tiparser::AST::InitOpPtrs();
-    /*gfx_Begin();
+    gfx_Begin();
     bp::InitCustomPalette();
-    for(int row = 0; row < 8; row++) {
-        for(int col = 0; col < 32; col++) {
-            gfx_SetColor(row * 32 + col);
-            gfx_FillRectangle(col * 10, row * 30, 10, 30);
-        }
+    bp::TriGFX test1 = {{186, 164, 0}, {120, 178, 0}, {204, 196, 0}};
+    bp::TriGFX test2 = {{248, 152, 0}, {186, 164, 0}, {270, 182, 0}};
+    bp::TriGFX test3 = {{134, 210, 0}, {204, 196, 0}, {120, 178, 0}};
+    bp::TriGFX test4 = {{204, 196, 0}, {270, 182, 0}, {186, 164, 0}};
+    while (os_GetCSC() != sk_Clear) {
     }
-    while(os_GetCSC() != sk_Clear) {}
-    gfx_End();*/
+    bp::RasterizeTriScanlines(test1, 1 * 32);
+    bp::RasterizeTriScanlines(test2, 2 * 32);
+    bp::RasterizeTriScanlines(test3, 3 * 32);
+    bp::RasterizeTriScanlines(test4, 4 * 32);
+    while (os_GetCSC() != sk_Clear) {
+    }
+    gfx_End();
 
     bp::MainMenu menu;
     menu.Run();

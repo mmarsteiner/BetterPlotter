@@ -74,6 +74,8 @@ class Plot3D {
 
     bool AboveZMax(double z) const;
     bool BelowZMin(double z) const;
+    bool WithinXBounds(double x) const;
+    bool WithinYBounds(double y) const;
     bool WithinZBounds(double z) const;
 
     static Point3D InterpolateByZ(const Point3D& p0, const Point3D& p1,
@@ -88,9 +90,7 @@ class Plot3D {
     void Open();
     void Close();
 
-    void AddTri(const Tri3D& tri);
-    void AddLine(const Line3D& line);
-
+    void DrawPoint3DMesh(const Point3DMesh& mesh);
     void DrawZClippedLine(const Line3D& line, uint8_t color);
     void DrawLine(const Line3D& line, uint8_t color);
     void ShadeTri(const Tri3D& tri, BaseColor color);

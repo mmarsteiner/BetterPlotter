@@ -5,6 +5,9 @@
 #pragma once
 
 #define TEXT_HEIGHT 8
+#include <Utils/stack.h>
+#include <debug.h>
+
 #include <cmath>
 #include <cstdint>
 
@@ -16,6 +19,13 @@ struct PointGFX {
     PointGFX() : x(0), y(0), depth(0) {}
     PointGFX(int x, int y) : x{x}, y{y}, depth(0) {}
     PointGFX(int x, int y, uint8_t z) : x{x}, y{y}, depth{z} {}
+    void dbg_print(bool newLine) const {
+        if (newLine) {
+            dbg_printf("(%d, %d)\n", x, y);
+        } else {
+            dbg_printf("(%d, %d)", x, y);
+        }
+    }
 };
 
 struct Point2D {
@@ -87,24 +97,6 @@ struct LineGFX {
     PointGFX finish;
     LineGFX(const PointGFX& start, const PointGFX& finish)
         : start{start}, finish{finish} {}
-    // algorithm from: https://stackoverflow.com/a/1968345
-    bool Intersects(const LineGFX& other, PointGFX& output) const {
-        PointGFX s1(finish.x - start.x, finish.y - start.y);
-        PointGFX s2(other.finish.x - other.start.x,
-                    other.finish.y - other.start.y);
-        double s = (-s1.y * static_cast<double>(start.x - other.start.x) +
-                    s1.x * static_cast<double>(start.y - other.start.y)) /
-                   (-s2.x * s1.y + s1.x * s2.y);
-        double t = (s2.x * static_cast<double>(start.y - other.start.y) -
-                    s2.y * static_cast<double>(start.x - other.start.x)) /
-                   (-s2.x * s1.y + s1.x * s2.y);
-        if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
-            output.x = start.x + t * s1.x;
-            output.y = start.y + t * s1.y;
-            return true;
-        }
-        return false;
-    }
 };
 
 struct TriGFX {
@@ -113,5 +105,22 @@ struct TriGFX {
     PointGFX p2;
     TriGFX(const PointGFX& p0, const PointGFX& p1, const PointGFX& p2)
         : p0{p0}, p1{p1}, p2{p2} {}
+    void dbg_print(bool newLine) const {
+        p0.dbg_print(false);
+        dbg_printf(" -> ");
+        p1.dbg_print(false);
+        dbg_printf(" -> ");
+        p2.dbg_print(false);
+        if (newLine) {
+            dbg_printf("\n");
+        }
+    }
+};
+
+struct Point3DMesh {
+    const Stack<Point3D>& points;
+    int width;
+    int height;
+    size_t size;
 };
 }  // namespace bp

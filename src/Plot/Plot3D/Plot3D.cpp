@@ -51,6 +51,14 @@ bool Plot3D::BelowZMin(double z) const {
     return z - sm.GetDouble(ZMIN_3) < -1e-6;
 }
 
+bool Plot3D::WithinXBounds(double x) const {
+    return !(x - sm.GetDouble(XMAX_3) > 1e-6) && !(x - sm.GetDouble(XMIN_3) < -1e-6);
+}
+
+bool Plot3D::WithinYBounds(double y) const {
+    return !(y - sm.GetDouble(YMAX_3) > 1e-6) && !(y - sm.GetDouble(YMIN_3) < -1e-6);
+}
+
 bool Plot3D::WithinZBounds(double z) const {
     return !AboveZMax(z) && !BelowZMin(z);
 }
@@ -304,7 +312,10 @@ void Plot3D::DrawLine(const Line3D& line, uint8_t color) {
 
 void Plot3D::ShadeTri(const Tri3D& tri, BaseColor baseColor) {
     if (!WithinZBounds(tri.p0.z) || !WithinZBounds(tri.p1.z) ||
-        !WithinZBounds(tri.p2.z)) {
+        !WithinZBounds(tri.p2.z) || !WithinXBounds(tri.p0.x) ||
+        !WithinXBounds(tri.p1.x) || !WithinXBounds(tri.p2.x) ||
+        !WithinYBounds(tri.p0.y) || !WithinYBounds(tri.p1.y) ||
+        !WithinYBounds(tri.p2.y)) {
         return;
     }
     double lf = GetLightingFactor(tri);

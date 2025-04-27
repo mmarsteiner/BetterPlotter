@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Plot/Plot3D/Plot3D.h>
+#include <string.h>
 
 #include "Geometry.h"
 
@@ -28,6 +29,90 @@ inline int max3(int a, int b, int c) {
 inline double det(double a, double b, double c, double d) {
     return a * d - b * c;
 }
+
+inline void OrderVerticies(const TriGFX& tri, const PointGFX** orderedVerticies) {
+    bool used[3] = {false, false, false};
+    if (tri.p0.y < tri.p1.y) {
+        if (tri.p0.y < tri.p2.y) {
+            orderedVerticies[0] = &tri.p0;
+            used[0] = true;
+        } else {
+            orderedVerticies[0] = &tri.p2;
+            used[2] = true;
+        }
+    } else {
+        if (tri.p1.y < tri.p2.y) {
+            orderedVerticies[0] = &tri.p1;
+            used[1] = true;
+        } else {
+            orderedVerticies[0] = &tri.p2;
+            used[2] = true;
+        }
+    }
+    if (tri.p0.y > tri.p1.y) {
+        if (tri.p0.y > tri.p2.y) {
+            orderedVerticies[2] = &tri.p0;
+            used[0] = true;
+        } else {
+            orderedVerticies[2] = &tri.p2;
+            used[2] = true;
+        }
+    } else {
+        if (tri.p1.y > tri.p2.y) {
+            orderedVerticies[2] = &tri.p1;
+            used[1] = true;
+        } else {
+            orderedVerticies[2] = &tri.p2;
+            used[2] = true;
+        }
+    }
+    // deduce which one is the middle
+    if (used[0] && used[1]) {
+        orderedVerticies[1] = &tri.p2;
+    } else if (used[0] && used[2]) {
+        orderedVerticies[1] = &tri.p1;
+    } else if (used[1] && used[2]) {
+        orderedVerticies[1] = &tri.p0;
+    }
+}
+
+/*inline void RasterizeTriScanlines(const TriGFX& tri, uint8_t color) {
+    tri.dbg_print(true);
+    // order vertices from bottom to top
+    const PointGFX* orderedVerticies[3];
+    OrderVerticies(tri, orderedVerticies);
+    if (orderedVerticies[2]->y - orderedVerticies[0]->y == 0) {
+        // triangle is completely flat; dont draw it at all
+        return;
+    }
+    bool bottomFlat = orderedVerticies[1]->y - orderedVerticies[0]->y == 0;
+    bool topFlat = orderedVerticies[2]->y - orderedVerticies[1]->y == 0;
+    // m0 and m1 tell us for each y coordinate we increase, how much does the x coordinate change
+    double m0;
+    double m1 = static_cast<double>(orderedVerticies[2]->x - orderedVerticies[0]->x) / static_cast<double>(orderedVerticies[2]->y - orderedVerticies[0]->y);
+    if (!topFlat) {
+        m0 = static_cast<double>(orderedVerticies[2]->x - orderedVerticies[1]->x) / static_cast<double>(orderedVerticies[2]->y - orderedVerticies[1]->y);
+        for (int y = orderedVerticies[2]->y; y >= orderedVerticies[1]->y; --y) {
+            int dy = y - orderedVerticies[2]->y;
+            double dx0 = dy * m0;
+            double dx1 = dy * m1;
+            size_t width = round(fabs(dx1 - dx0));
+            size_t leftX = orderedVerticies[2]->x + round(fmin(dx0, dx1));
+            memset(gfx_vram + y * GFX_LCD_WIDTH + leftX, color, width);
+        }
+    }
+    if (!bottomFlat) {
+        m0 = static_cast<double>(orderedVerticies[1]->x - orderedVerticies[0]->x) / static_cast<double>(orderedVerticies[1]->y - orderedVerticies[0]->y);
+        for (int y = orderedVerticies[0]->y; y <= orderedVerticies[1]->y; ++y) {
+            int dy = y - orderedVerticies[0]->y;
+            double dx0 = dy * m0;
+            double dx1 = dy * m1;
+            size_t width = round(fabs(dx1 - dx0));
+            size_t leftX = orderedVerticies[0]->x + round(fmin(dx0, dx1));
+            memset(gfx_vram + y * GFX_LCD_WIDTH + leftX, color, width);
+        }
+    }
+}*/
 
 inline void RasterizeLine(const LineGFX& line, uint8_t color) {
     // dbg_printf("Rasterizing line with color %d\n", color);
@@ -139,10 +224,13 @@ inline void RasterizeTri(const TriGFX& tri, uint8_t color) {
     double v0y = tri.p1.y - tri.p0.y;
     double v1x = tri.p2.x - tri.p0.x;
     double v1y = tri.p2.y - tri.p0.y;
+    double dv = tri.p1.depth - tri.p0.depth;
+    double dw = tri.p2.depth - tri.p0.depth;
     double denominator = det(v0x, v0y, v1x, v1y);
     if (denominator == 0) {
         denominator = 0.001;
     }
+    double invDenom = 1 / denominator;
 
     for (int x = minX; x <= maxX; ++x) {
         for (int y = minY; y <= maxY; ++y) {
@@ -151,16 +239,14 @@ inline void RasterizeTri(const TriGFX& tri, uint8_t color) {
             double v2y = y - tri.p2.y;
             double v3x = x - tri.p0.x;
             double v3y = y - tri.p0.y;
-            double v = det(-v1x, v2x, -v1y, v2y) / denominator;
-            double w = det(v0x, v3x, v0y, v3y) / denominator;
-            double u = 1.0 - v - w;
-            if (u < 0 || v < 0 || w < 0) {
+            double v = det(-v1x, v2x, -v1y, v2y) * invDenom;
+            double w = det(v0x, v3x, v0y, v3y) * invDenom;
+            if (v < 0 || w < 0 || v + w > 1.0) {
                 // Point is not in the triangle if any of the barycentric
                 // coordinates are negative
                 continue;
             }
-            uint8_t depth =
-                tri.p0.depth * u + tri.p1.depth * v + tri.p2.depth * w;
+            uint8_t depth = tri.p0.depth + dv * v + dw * w;
             if (depth < gfx_vbuffer[y][x]) {
                 gfx_vbuffer[y][x] = depth;
                 gfx_vram[y * GFX_LCD_WIDTH + x] = color;
