@@ -90,7 +90,6 @@ class Plot3D {
     void Open();
     void Close();
 
-    void DrawPoint3DMesh(const Point3DMesh& mesh);
     void DrawZClippedLine(const Line3D& line, uint8_t color);
     void DrawLine(const Line3D& line, uint8_t color);
     void ShadeTri(const Tri3D& tri, BaseColor color);

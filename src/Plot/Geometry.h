@@ -116,11 +116,4 @@ struct TriGFX {
         }
     }
 };
-
-struct Point3DMesh {
-    const Stack<Point3D>& points;
-    int width;
-    int height;
-    size_t size;
-};
 }  // namespace bp
