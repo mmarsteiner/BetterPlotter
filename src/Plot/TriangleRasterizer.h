@@ -76,44 +76,6 @@ inline void OrderVerticies(const TriGFX& tri, const PointGFX** orderedVerticies)
     }
 }
 
-/*inline void RasterizeTriScanlines(const TriGFX& tri, uint8_t color) {
-    tri.dbg_print(true);
-    // order vertices from bottom to top
-    const PointGFX* orderedVerticies[3];
-    OrderVerticies(tri, orderedVerticies);
-    if (orderedVerticies[2]->y - orderedVerticies[0]->y == 0) {
-        // triangle is completely flat; dont draw it at all
-        return;
-    }
-    bool bottomFlat = orderedVerticies[1]->y - orderedVerticies[0]->y == 0;
-    bool topFlat = orderedVerticies[2]->y - orderedVerticies[1]->y == 0;
-    // m0 and m1 tell us for each y coordinate we increase, how much does the x coordinate change
-    double m0;
-    double m1 = static_cast<double>(orderedVerticies[2]->x - orderedVerticies[0]->x) / static_cast<double>(orderedVerticies[2]->y - orderedVerticies[0]->y);
-    if (!topFlat) {
-        m0 = static_cast<double>(orderedVerticies[2]->x - orderedVerticies[1]->x) / static_cast<double>(orderedVerticies[2]->y - orderedVerticies[1]->y);
-        for (int y = orderedVerticies[2]->y; y >= orderedVerticies[1]->y; --y) {
-            int dy = y - orderedVerticies[2]->y;
-            double dx0 = dy * m0;
-            double dx1 = dy * m1;
-            size_t width = round(fabs(dx1 - dx0));
-            size_t leftX = orderedVerticies[2]->x + round(fmin(dx0, dx1));
-            memset(gfx_vram + y * GFX_LCD_WIDTH + leftX, color, width);
-        }
-    }
-    if (!bottomFlat) {
-        m0 = static_cast<double>(orderedVerticies[1]->x - orderedVerticies[0]->x) / static_cast<double>(orderedVerticies[1]->y - orderedVerticies[0]->y);
-        for (int y = orderedVerticies[0]->y; y <= orderedVerticies[1]->y; ++y) {
-            int dy = y - orderedVerticies[0]->y;
-            double dx0 = dy * m0;
-            double dx1 = dy * m1;
-            size_t width = round(fabs(dx1 - dx0));
-            size_t leftX = orderedVerticies[0]->x + round(fmin(dx0, dx1));
-            memset(gfx_vram + y * GFX_LCD_WIDTH + leftX, color, width);
-        }
-    }
-}*/
-
 inline void RasterizeLine(const LineGFX& line, uint8_t color) {
     // dbg_printf("Rasterizing line with color %d\n", color);
     double xDiff = line.finish.x - line.start.x;
