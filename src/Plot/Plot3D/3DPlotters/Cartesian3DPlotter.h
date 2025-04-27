@@ -12,10 +12,6 @@ namespace bp {
 class Cartesian3DPlotter final : public Plotter3D {
   public:
     explicit Cartesian3DPlotter(const SettingsManager& sm) : Plotter3D(sm) {}
-    // 19.29
-    // 155.89
-    // 136.60 diff
-    // 0.683 s/tri => 683 ms /tri
     bool Plot(const tiparser::AST* func, Plot3D& plot, BaseColor color) const override {
         gfx_SetDrawScreen();
         const char* loadingString = "Loading vertices...";
