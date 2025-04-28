@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TriangleRasterizer.h"
+#include "Rasterizer.h"
 
 namespace bp {
 

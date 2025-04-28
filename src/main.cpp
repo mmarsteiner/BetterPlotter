@@ -5,7 +5,6 @@
 #include <Menu/MainMenu.h>
 #include <Plot/Colors.h>
 #include <Plot/Geometry.h>
-#include <Plot/TriangleRasterizer.h>
 
 int main() {
     tiparser::AST::InitOpPtrs();

@@ -6,7 +6,7 @@
 
 #include <Parsing/Parser.h>
 #include <Plot/Colors.h>
-#include <Plot/TriangleRasterizer.h>
+#include <Plot/Rasterizer.h>
 #include <graphx.h>
 
 #include "Plot/Geometry.h"
