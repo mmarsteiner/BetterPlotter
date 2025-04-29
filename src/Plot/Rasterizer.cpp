@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Rasterizer.h"
 
 namespace bp {
