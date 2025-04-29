@@ -3,7 +3,7 @@
 #include <ti/vars.h>
 
 #include "../MenuItem.h"
-#include "Parsing/parser.h"
+#include "Parsing/Parser.h"
 #include "Plot/Plot3D/3DPlotters/Cartesian3DPlotter.h"
 #include "Plot/Plot3D/3DPlotters/CylindricalPlotter.h"
 #include "Plot/Plot3D/3DPlotters/ParaSurfacePlotter.h"
