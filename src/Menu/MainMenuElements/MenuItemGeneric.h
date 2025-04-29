@@ -15,7 +15,7 @@ class MenuItemGeneric final : public MenuItem {
     char label[20]{};
     MenuFunction menuFunc;
 
-   public:
+    public:
     MenuItemGeneric(const char *label, MenuFunction menuFunc)
         : menuFunc{menuFunc} {
         strcpy(this->label, label);

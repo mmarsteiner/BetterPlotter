@@ -23,7 +23,7 @@ class QuadtreePlotter {
     static double GetT(double f1, double f2);
     static Point2D LinearInterpolate(const Point2D& p0, const Point2D& p1, double t);
 
-  public:
+    public:
     explicit QuadtreePlotter(const SettingsManager& sm);
     bool plotImplicit(const tiparser::AST* func, Plot2D& plot);
 };

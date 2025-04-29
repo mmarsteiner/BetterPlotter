@@ -15,7 +15,7 @@ namespace bp {
 Plotter3D* CreatePlotter(PlotType3D type, const SettingsManager& cartSm, const SettingsManager& cylSm, const SettingsManager& paraSm);
 
 class MenuItemPlot3D final : public MenuItem {
-  private:
+    private:
     Plot3D plot;
     const SettingsManager& colorSm;
     const SettingsManager& cartSm;
@@ -42,7 +42,7 @@ class MenuItemPlot3D final : public MenuItem {
         return nullptr;
     }
 
-  public:
+    public:
     MenuItemPlot3D(const SettingsManager& colorSettings, const SettingsManager& cartSettings, const SettingsManager& cylSettings, const SettingsManager& paraSettings)
         : plot{cartSettings}, colorSm{colorSettings}, cartSm{cartSettings}, cylSm{cylSettings}, paraSm{paraSettings} {
     }

@@ -14,7 +14,7 @@ class MenuItemParametricSettings final : public MenuItem {
     SettingsManager* manager{};
     Stack<Setting> defaultSettings{};
 
-   public:
+    public:
     MenuItemParametricSettings() {
         Setting* defaults[] = {SettingDouble::Create("T Min", 0.0),
                                SettingDouble::Create("T Max", 2.0 * M_PI),

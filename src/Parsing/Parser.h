@@ -40,7 +40,7 @@ class Parser {
     ASTBinOp* B1();
     ASTBinOp* B2();
 
-  public:
+    public:
     AST* Parse(const char* varName);
 };
 }  // namespace tiparser

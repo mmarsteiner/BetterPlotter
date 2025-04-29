@@ -7,7 +7,7 @@ namespace bp {
 class ParaSurfacePlotter final : public Plotter3D {
     const SettingsManager& smPara;
 
-  public:
+    public:
     ParaSurfacePlotter(const SettingsManager& sm, const SettingsManager& smPara) : Plotter3D(sm), smPara{smPara} {}
 
     bool Plot(const tiparser::AST* func, Plot3D& plot, BaseColor color) const override {

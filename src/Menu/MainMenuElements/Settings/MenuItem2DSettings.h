@@ -14,7 +14,7 @@ class MenuItem2DSettings final : public MenuItem {
     SettingsManager *manager;
     Stack<Setting> defaultSettings{};
 
-   public:
+    public:
     const SettingsManager &GetSettingsManager() const { return *manager; }
 
     MenuItem2DSettings() {

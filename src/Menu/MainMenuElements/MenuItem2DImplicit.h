@@ -14,7 +14,7 @@ class MenuItem2DImplicit final : public MenuItem {
     Plot2D plot;
     const SettingsManager& sm;
 
-  public:
+    public:
     explicit MenuItem2DImplicit(const SettingsManager& sm) : plot(sm), sm{sm} {}
 
     ~MenuItem2DImplicit() override {}

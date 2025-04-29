@@ -13,7 +13,7 @@ class MenuItemCylSettings final : public MenuItem {
     SettingsManager* manager{};
     Stack<Setting> defaultSettings{};
 
-   public:
+    public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
 
     MenuItemCylSettings() {

@@ -34,7 +34,7 @@ class MainMenu final : public Menu {
     MenuItemSubMenu settingsSubMenu{settingsSelectionMenu};
     MenuItemClose menuItemClose;
 
-  public:
+    public:
     explicit MainMenu() : Menu("Better Plotter") {
         settingsSelectionMenu.AddMenuItem(menuItem2DSettings);
         settingsSelectionMenu.AddMenuItem(menuItem3DPlotColorSettings);

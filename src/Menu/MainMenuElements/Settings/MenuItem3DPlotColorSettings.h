@@ -24,7 +24,7 @@ class MenuItem3DPlotColorSettings final : public MenuItem {
     SettingsManager* manager;
     Stack<Setting> defaultSettings;
 
-  public:
+    public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
     MenuItem3DPlotColorSettings() {
         Setting* defaults[] = {

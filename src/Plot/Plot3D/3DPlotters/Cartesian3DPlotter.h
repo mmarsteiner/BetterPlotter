@@ -10,7 +10,7 @@
 namespace bp {
 
 class Cartesian3DPlotter final : public Plotter3D {
-  public:
+    public:
     explicit Cartesian3DPlotter(const SettingsManager& sm) : Plotter3D(sm) {}
     bool Plot(const tiparser::AST* func, Plot3D& plot, BaseColor color) const override {
         gfx_SetDrawScreen();

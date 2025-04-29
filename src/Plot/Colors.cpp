@@ -16,12 +16,12 @@ uint16_t bp::RGBColor::To1555() const { return gfx_RGBTo1555(R, G, B); }
 
 void bp::InitCustomPalette() {
     RGBColor startingColors[] = {
-        RGBColor(0, 0, 0),     RGBColor(0, 0, 255),  // blue
-        RGBColor(255, 0, 0),                         // red
-        RGBColor(150, 0, 140),                       // magenta
-        RGBColor(0, 150, 0),                         // green
-        RGBColor(200, 130, 0),                       // orange
-        RGBColor(90, 70, 40),                        // brown
+        RGBColor(0, 0, 0), RGBColor(0, 0, 255),  // blue
+        RGBColor(255, 0, 0),                     // red
+        RGBColor(150, 0, 140),                   // magenta
+        RGBColor(0, 150, 0),                     // green
+        RGBColor(200, 130, 0),                   // orange
+        RGBColor(90, 70, 40),                    // brown
     };
     RGBColor white(255, 255, 255);
     for (int row = 0; row < 7; row++) {

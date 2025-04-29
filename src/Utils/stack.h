@@ -17,7 +17,7 @@ class Stack {
     size_t max;
     T** data;
 
-  public:
+    public:
     Stack(uint32_t initSize);
     Stack();
     ~Stack();

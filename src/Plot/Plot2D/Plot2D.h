@@ -29,7 +29,7 @@ class Plot2D {
     PointGFX GetScreenCoords(const Point2D& plotCoords) const;
     Region2D ConvertRegion(const Region2D& in) const;
 
-   public:
+    public:
     explicit Plot2D(const SettingsManager& sm);
     ~Plot2D();
 

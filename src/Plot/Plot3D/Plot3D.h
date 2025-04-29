@@ -83,7 +83,7 @@ class Plot3D {
     double GetLightingFactor(const Tri3D& tri) const;
     static uint8_t GetShadeColor(double lightingFactor, BaseColor baseColor);
 
-  public:
+    public:
     explicit Plot3D(const SettingsManager& sm) : sm{sm} {}
     ~Plot3D() {}
 

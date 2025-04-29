@@ -11,7 +11,7 @@ class MenuItem3DCartesianSettings final : public MenuItem {
     SettingsManager* manager;
     Stack<Setting> defaultSettings{};
 
-  public:
+    public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
 
     MenuItem3DCartesianSettings() {

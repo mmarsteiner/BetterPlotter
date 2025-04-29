@@ -10,10 +10,10 @@
 
 namespace bp {
 class Plotter3D {
-  protected:
+    protected:
     const SettingsManager& sm;
 
-  public:
+    public:
     explicit Plotter3D(const SettingsManager& sm) : sm{sm} {}
     virtual ~Plotter3D() = default;
 

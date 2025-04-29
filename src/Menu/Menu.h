@@ -24,7 +24,7 @@ class Menu {
     void DrawMenu() const;
     void MoveCursor(int unitsUp);
 
-   public:
+    public:
     explicit Menu(const char* title);
     ~Menu();
     void Run();

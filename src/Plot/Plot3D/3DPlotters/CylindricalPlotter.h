@@ -15,7 +15,7 @@ namespace bp {
 class CylindricalPlotter final : public Plotter3D {
     const SettingsManager& smCyl;
 
-  public:
+    public:
     CylindricalPlotter(const SettingsManager& sm, const SettingsManager& smCyl)
         : Plotter3D(sm), smCyl{smCyl} {}
 

@@ -11,7 +11,7 @@ namespace bp {
 class MenuItemSubMenu final : public MenuItem {
     Menu& subMenu;
 
-   public:
+    public:
     explicit MenuItemSubMenu(Menu& subMenu) : subMenu{subMenu} {}
 
     bool Run() override {

@@ -36,7 +36,7 @@ class SettingsManager {
 
     void OverwriteWithDefaults();
 
-   public:
+    public:
     SettingsManager(const char *title, const char *appVarName,
                     const Stack<Setting> *defaultSettings);
 

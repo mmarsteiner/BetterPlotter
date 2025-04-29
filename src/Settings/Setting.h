@@ -51,7 +51,7 @@ struct Setting {
 
     virtual Setting *Copy() = 0;
 
-   protected:
+    protected:
     explicit Setting(const char *label) {
         strncpy(this->label, label, SETTING_LABEL_MAX);
     }
@@ -78,7 +78,7 @@ struct SettingDouble final : Setting {
 
     ~SettingDouble() override = default;
 
-   private:
+    private:
     SettingDouble(const char *label, const double val)
         : Setting(label), val{val} {}
 };
@@ -104,7 +104,7 @@ struct SettingUInt final : Setting {
 
     ~SettingUInt() override = default;
 
-   private:
+    private:
     SettingUInt(const char *label, const uint16_t val)
         : Setting(label), val{val} {}
 };
@@ -128,7 +128,7 @@ struct SettingBool final : Setting {
 
     ~SettingBool() override = default;
 
-   private:
+    private:
     SettingBool(const char *label, const bool val) : Setting(label), val{val} {}
 };
 }  // namespace bp

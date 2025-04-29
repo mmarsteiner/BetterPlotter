@@ -10,7 +10,7 @@
 
 namespace bp {
 class MenuItemClose final : public MenuItem {
-   public:
+    public:
     MenuItemClose() = default;
 
     ~MenuItemClose() override = default;

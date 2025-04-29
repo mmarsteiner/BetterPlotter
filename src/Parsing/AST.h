@@ -18,7 +18,7 @@ struct AST {
     virtual double Eval(size_t numVars, const uint8_t* vars, const double* vals) const = 0;
     static void InitOpPtrs();
 
-  protected:
+    protected:
     static BinOpPtr binOps[256];
     static UOpPtr uOps[256];
 };
