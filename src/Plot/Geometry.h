@@ -5,7 +5,6 @@
 #pragma once
 
 #define TEXT_HEIGHT 8
-#include <Utils/stack.h>
 #include <debug.h>
 
 #include <cmath>

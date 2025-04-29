@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Settings/SettingsManager.h>
+#include <Utils/List.h>
 
 namespace bp {
 
@@ -24,7 +25,7 @@ class ParaSurfacePlotter final : public Plotter3D {
             GFX_LCD_WIDTH - gfx_GetStringWidth(loadingString) - TEXT_PADDING,
             GFX_LCD_HEIGHT - TEXT_HEIGHT - TEXT_PADDING);
         gfx_SetDrawBuffer();
-        Stack<Point3D> points;
+        List<Point3D> points;
         int numRows = 0;
         int numCols = 0;
         uint8_t vars[2] = {OS_TOK_S, OS_TOK_T};
@@ -33,7 +34,7 @@ class ParaSurfacePlotter final : public Plotter3D {
              t += smPara.GetDouble(TSTEP)) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.RemoveLast();  // more efficient to remove from back of the list
                 }
                 return true;
             }
@@ -46,7 +47,7 @@ class ParaSurfacePlotter final : public Plotter3D {
                 double result[3];
                 tripleFunc->TripleEval(2, vars, vVals, result);
                 auto* p = new Point3D(result[0], result[1], result[2]);
-                points.Push(p);
+                points.Add(p);
                 numCols++;
             }
         }
@@ -72,7 +73,7 @@ class ParaSurfacePlotter final : public Plotter3D {
         for (size_t i = 0; i < points.Size(); i++) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.RemoveLast();
                 }
                 return true;
             }
@@ -103,7 +104,7 @@ class ParaSurfacePlotter final : public Plotter3D {
         }
 
         while (!points.IsEmpty()) {
-            delete points.Pop();
+            delete points.RemoveLast();
         }
 
         gfx_SetColor(0xFF);

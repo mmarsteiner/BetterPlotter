@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Utils/List.h>
+
 #include <cstring>
 
 #define PARAMETRIC_SETTINGS_APPVAR_NAME "BPPAR"
@@ -12,7 +14,7 @@ namespace bp {
 
 class MenuItemParametricSettings final : public MenuItem {
     SettingsManager* manager{};
-    Stack<Setting> defaultSettings{};
+    List<Setting> defaultSettings{};
 
     public:
     MenuItemParametricSettings() {
@@ -22,9 +24,7 @@ class MenuItemParametricSettings final : public MenuItem {
                                SettingDouble::Create("S Min", 0.0),
                                SettingDouble::Create("S Max", 2.0 * M_PI),
                                SettingDouble::Create("S Step", 0.1 * M_PI)};
-        for (Setting* s : defaults) {
-            defaultSettings.Push(s);
-        }
+        defaultSettings.AddAll(defaults, 6);
         manager = new SettingsManager("Parametric Settings",
                                       PARAMETRIC_SETTINGS_APPVAR_NAME,
                                       &defaultSettings);
@@ -32,7 +32,7 @@ class MenuItemParametricSettings final : public MenuItem {
 
     ~MenuItemParametricSettings() override {
         while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.Pop();
+            delete defaultSettings.RemoveLast();
         }
         delete manager;
     }

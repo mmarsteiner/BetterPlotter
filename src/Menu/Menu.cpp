@@ -82,7 +82,7 @@ void Menu::Run() {
     }
 }
 
-void Menu::AddMenuItem(MenuItem& menuItem) { menuItems.Push(&menuItem); }
+void Menu::AddMenuItem(MenuItem& menuItem) { menuItems.Add(&menuItem); }
 
 void Menu::AppendTitle(char* out) const { strcat(out, title); }
 

@@ -22,7 +22,7 @@ class Cartesian3DPlotter final : public Plotter3D {
             GFX_LCD_HEIGHT - TEXT_HEIGHT - TEXT_PADDING);
         gfx_SetDrawBuffer();
 
-        Stack<Point3D> points;
+        List<Point3D> points;
         int numRows = 0;
         int numCols = 0;
         uint8_t vars[2] = {OS_TOK_X, OS_TOK_Y};
@@ -31,7 +31,7 @@ class Cartesian3DPlotter final : public Plotter3D {
              x += sm.GetDouble(XSTEP_3)) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.RemoveLast();
                 }
                 return true;
             }
@@ -42,7 +42,7 @@ class Cartesian3DPlotter final : public Plotter3D {
                 vVals[0] = x;
                 vVals[1] = y;
                 auto* p = new Point3D(x, y, func->Eval(2, vars, vVals));
-                points.Push(p);
+                points.Add(p);
                 numCols++;
             }
         }
@@ -69,7 +69,7 @@ class Cartesian3DPlotter final : public Plotter3D {
         for (size_t i = 0; i < points.Size(); i++) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.RemoveLast();
                 }
                 return true;
             }
@@ -100,7 +100,7 @@ class Cartesian3DPlotter final : public Plotter3D {
         }
 
         while (!points.IsEmpty()) {
-            delete points.Pop();
+            delete points.RemoveLast();
         }
 
         gfx_SetColor(0xFF);

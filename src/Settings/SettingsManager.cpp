@@ -4,27 +4,23 @@
 
 #include "SettingsManager.h"
 
-#include <debug.h>
-
-#include <typeinfo>
-
 namespace bp {
 SettingsManager::SettingsManager(const char *title, const char *appVarName,
-                                 const Stack<Setting> *defaultSettings) {
+                                 const List<Setting> *defaultSettings) {
     strncpy(this->title, title, SETTING_LABEL_MAX);
     strncpy(this->appVarName, appVarName, SETTING_LABEL_MAX);
     for (size_t i = 0; i < defaultSettings->Size(); i++) {
-        this->defaultSettings.Push(defaultSettings->Get(i)->Copy());
+        this->defaultSettings.Add(defaultSettings->Get(i)->Copy());
     }
     RetrieveSettings();
 }
 
 SettingsManager::~SettingsManager() {
-    for (size_t i = 0; i < settings.Size(); i++) {
-        delete settings.Pop();
+    while (!settings.IsEmpty()) {
+        delete settings.RemoveLast();
     }
-    for (size_t i = 0; i < defaultSettings.Size(); i++) {
-        delete defaultSettings.Pop();
+    while (!defaultSettings.IsEmpty()) {
+        delete defaultSettings.RemoveLast();
     }
 }
 
@@ -105,10 +101,10 @@ void SettingsManager::RetrieveSettings() {
 
 void SettingsManager::OverwriteWithDefaults() {
     while (!settings.IsEmpty()) {
-        delete settings.Pop();
+        delete settings.RemoveLast();
     }
     for (size_t i = 0; i < defaultSettings.Size(); i++) {
-        settings.Push(defaultSettings.Get(i)->Copy());
+        settings.Add(defaultSettings.Get(i)->Copy());
     }
 }
 

@@ -6,10 +6,12 @@
 
 #define SETTINGS_3D_CART_APPVAR_NAME "BP3DC"
 
+#include <Utils/List.h>
+
 namespace bp {
 class MenuItem3DCartesianSettings final : public MenuItem {
     SettingsManager* manager;
-    Stack<Setting> defaultSettings{};
+    List<Setting> defaultSettings{};
 
     public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
@@ -30,9 +32,8 @@ class MenuItem3DCartesianSettings final : public MenuItem {
             SettingBool::Create("Shade Surface", true),
             SettingBool::Create("Draw Outer Box", true),
         };
-        for (Setting* s : defaults) {
-            defaultSettings.Push(s);
-        }
+        defaultSettings.AddAll(defaults, 13);
+
         manager = new SettingsManager(
             "Cartesian Plot Settings", SETTINGS_3D_CART_APPVAR_NAME, &defaultSettings);
     }
@@ -40,7 +41,7 @@ class MenuItem3DCartesianSettings final : public MenuItem {
     ~MenuItem3DCartesianSettings() override {
         delete manager;
         while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.Pop();
+            delete defaultSettings.RemoveLast();
         }
     }
 

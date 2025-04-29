@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Utils/List.h>
+
 #include "../../../Plot/Colors.h"
 #include "../../../Settings/Setting.h"
 #include "../../../Settings/SettingsManager.h"
@@ -22,7 +24,7 @@ enum PlotType3D {
 
 class MenuItem3DPlotColorSettings final : public MenuItem {
     SettingsManager* manager;
-    Stack<Setting> defaultSettings;
+    List<Setting> defaultSettings;
 
     public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
@@ -42,16 +44,14 @@ class MenuItem3DPlotColorSettings final : public MenuItem {
             SettingUInt::Create("Y6 Color", 6),
             SettingUInt::Create("Y7 Type", OFF),
             SettingUInt::Create("Y7 Color", 0)};
-        for (Setting* s : defaults) {
-            defaultSettings.Push(s);
-        }
+        defaultSettings.AddAll(defaults, 14);
         manager = new SettingsManager("3D Plot & Color Selection", SETTINGS_3D_PLOTS, &defaultSettings);
     }
 
     ~MenuItem3DPlotColorSettings() override {
         delete manager;
         while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.Pop();
+            delete defaultSettings.RemoveLast();
         }
     }
 

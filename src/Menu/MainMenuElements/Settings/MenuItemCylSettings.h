@@ -5,13 +5,15 @@
 #pragma once
 
 #define SETTINGS_CYLINDRICAL_APPVAR_NAME "BPCYL"
+#include <Utils/List.h>
+
 #include <cmath>
 
 namespace bp {
 
 class MenuItemCylSettings final : public MenuItem {
     SettingsManager* manager{};
-    Stack<Setting> defaultSettings{};
+    List<Setting> defaultSettings{};
 
     public:
     const SettingsManager& GetSettingsManager() const { return *manager; }
@@ -21,9 +23,7 @@ class MenuItemCylSettings final : public MenuItem {
                                SettingDouble::Create("Theta Max", 2.0 * M_PI),
                                SettingDouble::Create("Theta Step", 0.1 * M_PI),
                                SettingDouble::Create("Z Step", 0.5)};
-        for (Setting* setting : defaults) {
-            defaultSettings.Push(setting);
-        }
+        defaultSettings.AddAll(defaults, 4);
         manager = new SettingsManager("Cylindrical Settings",
                                       SETTINGS_CYLINDRICAL_APPVAR_NAME,
                                       &defaultSettings);
@@ -31,7 +31,7 @@ class MenuItemCylSettings final : public MenuItem {
 
     ~MenuItemCylSettings() override {
         while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.Pop();
+            delete defaultSettings.RemoveLast();
         }
         delete manager;
     }

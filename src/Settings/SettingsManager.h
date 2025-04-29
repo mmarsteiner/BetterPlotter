@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Utils/stack.h>
+#include <Utils/List.h>
 #include <Utils/utils.h>
 #include <debug.h>
 #include <fileioc.h>
@@ -12,6 +12,7 @@
 #include <ti/screen.h>
 
 #include <cstddef>
+#include <typeinfo>
 
 #include "Setting.h"
 
@@ -21,8 +22,8 @@ class SettingsManager {
     char appVarName[20]{};
     uint8_t selectedIdx = 0;
     uint8_t scrollOffset = 0;
-    Stack<Setting> settings{};
-    Stack<Setting> defaultSettings{};
+    List<Setting> settings{};
+    List<Setting> defaultSettings{};
 
     Setting *GetSelectedSetting() const;
 
@@ -38,7 +39,7 @@ class SettingsManager {
 
     public:
     SettingsManager(const char *title, const char *appVarName,
-                    const Stack<Setting> *defaultSettings);
+                    const List<Setting> *defaultSettings);
 
     ~SettingsManager();
 
@@ -56,7 +57,7 @@ class SettingsManager {
         return dynamic_cast<SettingBool *>(settings.Get(idx))->val;
     }
 
-    Stack<Setting> *GetSettings() { return &settings; }
+    List<Setting> *GetSettings() { return &settings; }
 
     void TestSettings() const;
 };

@@ -5,6 +5,7 @@
 #pragma once
 #include <Parsing/Parser.h>
 #include <Settings/SettingsManager.h>
+#include <Utils/List.h>
 
 #include <cmath>
 
@@ -28,7 +29,7 @@ class CylindricalPlotter final : public Plotter3D {
             GFX_LCD_WIDTH - gfx_GetStringWidth(loadingString) - TEXT_PADDING,
             GFX_LCD_HEIGHT - TEXT_HEIGHT - TEXT_PADDING);
         gfx_SetDrawBuffer();
-        Stack<Point3D> points;
+        List<Point3D> points;
         int numRings = 0;
         int numVertices = 0;
         uint8_t vars[2] = {OS_TOK_THETA, OS_TOK_Z};
@@ -37,7 +38,7 @@ class CylindricalPlotter final : public Plotter3D {
              z += smCyl.GetDouble(ZSTEP)) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.Remove(points.Size() - 1);
                 }
                 return true;
             }
@@ -50,7 +51,7 @@ class CylindricalPlotter final : public Plotter3D {
                 vVals[1] = z;
                 double r = func->Eval(2, vars, vVals);
                 auto* p = new Point3D(r * cos(theta), r * sin(theta), z);
-                points.Push(p);
+                points.Add(p);
                 numVertices++;
             }
         }
@@ -76,7 +77,7 @@ class CylindricalPlotter final : public Plotter3D {
         for (size_t i = 0; i < points.Size(); i++) {
             if (os_GetCSC() == sk_Clear) {
                 while (!points.IsEmpty()) {
-                    delete points.Pop();
+                    delete points.RemoveLast();
                 }
                 return true;
             }
@@ -108,7 +109,7 @@ class CylindricalPlotter final : public Plotter3D {
             }
         }
         while (!points.IsEmpty()) {
-            delete points.Pop();
+            delete points.RemoveLast();
         }
 
         gfx_SetColor(0xFF);

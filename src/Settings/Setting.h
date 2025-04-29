@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <Utils/stack.h>
 #include <Utils/utils.h>
 
 #include <cstdint>

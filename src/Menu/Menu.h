@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Utils/stack.h>
+#include <Utils/List.h>
 #include <Utils/utils.h>
 #include <debug.h>
 #include <ti/flags.h>
@@ -20,7 +20,7 @@ class Menu {
     char title[20]{};
 
     unsigned int selectedItem;
-    Stack<MenuItem> menuItems;
+    List<MenuItem> menuItems;
     void DrawMenu() const;
     void MoveCursor(int unitsUp);
 

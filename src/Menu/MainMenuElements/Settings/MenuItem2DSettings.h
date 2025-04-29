@@ -6,13 +6,14 @@
 
 #include <Menu/MenuItem.h>
 #include <Settings/SettingsManager.h>
+#include <Utils/List.h>
 
 #define SETTINGS_2D_APPVAR_NAME "BP2D"
 
 namespace bp {
 class MenuItem2DSettings final : public MenuItem {
     SettingsManager *manager;
-    Stack<Setting> defaultSettings{};
+    List<Setting> defaultSettings{};
 
     public:
     const SettingsManager &GetSettingsManager() const { return *manager; }
@@ -29,9 +30,7 @@ class MenuItem2DSettings final : public MenuItem {
                                SettingUInt::Create("Min Recursion", 3),
                                SettingUInt::Create("Max Recursion", 6),
                                SettingBool::Create("Debug Regions", false)};
-        for (Setting *setting : defaults) {
-            defaultSettings.Push(setting);
-        }
+        defaultSettings.AddAll(defaults, 11);
 
         manager = new SettingsManager(
             "2D Plot Settings", SETTINGS_2D_APPVAR_NAME, &defaultSettings);
@@ -40,7 +39,7 @@ class MenuItem2DSettings final : public MenuItem {
     ~MenuItem2DSettings() override {
         delete manager;
         while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.Pop();
+            delete defaultSettings.RemoveLast();
         }
     };
 
