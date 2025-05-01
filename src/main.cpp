@@ -8,12 +8,10 @@
 
 int main() {
     tiparser::AST::InitOpPtrs();
-    gfx_Begin();
     bp::InitCustomPalette();
-    while (os_GetCSC() != sk_Clear) {
-    }
-    gfx_End();
     bp::MainMenu menu;
     menu.Run();
+    while (os_GetCSC() != sk_Clear) {
+    }
     return 0;
 }
