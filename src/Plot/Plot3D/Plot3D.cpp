@@ -307,7 +307,7 @@ void Plot3D::DrawLine(const Line3D& line, uint8_t color) {
     PointGFX start, finish;
     GetScreenCoords(line.start, start);
     GetScreenCoords(line.finish, finish);
-    RasterizeLineBresenham({start, finish}, color * 32, 0x00);
+    RasterizeLine({start, finish}, color * 32);
 }
 
 void Plot3D::ShadeTri(const Tri3D& tri, BaseColor baseColor) {
