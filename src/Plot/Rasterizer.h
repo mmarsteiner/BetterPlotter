@@ -13,5 +13,6 @@ namespace bp {
 
 void RasterizeLine(const LineGFX& line, uint8_t color);
 void RasterizeTri(const TriGFX& tri, uint8_t color);
+void RasterizeLineBresenham(const LineGFX& line, uint8_t color0, uint8_t color1);
 
 }  // namespace bp
