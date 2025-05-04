@@ -5,12 +5,9 @@
 #include <Menu/MainMenu.h>
 #include <Plot/Colors.h>
 #include <Settings/Settings.h>
-#include <debug.h>
 
 int main() {
-    dbg_printf("Calling InitSettings()\n");
     bp::Settings::InitSettings();
-    dbg_printf("InitSettings() returned\n");
     tiparser::AST::InitOpPtrs();
     bp::InitCustomPalette();
     bp::MainMenu menu;
