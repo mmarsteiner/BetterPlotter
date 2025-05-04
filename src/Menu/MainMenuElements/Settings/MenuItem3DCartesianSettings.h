@@ -4,54 +4,19 @@
 
 #pragma once
 
-#define SETTINGS_3D_CART_APPVAR_NAME "BP3DC"
-
-#include <Utils/List.h>
+#include <Menu/MenuItem.h>
+#include <Settings/Settings.h>
 
 namespace bp {
 class MenuItem3DCartesianSettings final : public MenuItem {
-    SettingsManager* manager;
-    List<Setting> defaultSettings{};
-
     public:
-    const SettingsManager& GetSettingsManager() const { return *manager; }
-
-    MenuItem3DCartesianSettings() {
-        Setting* defaults[] = {
-            SettingDouble::Create("xMin", -5.0),
-            SettingDouble::Create("xMax", 5.0),
-            SettingDouble::Create("yMin", -5.0),
-            SettingDouble::Create("yMax", 5.0),
-            SettingDouble::Create("zMin", -5.0),
-            SettingDouble::Create("zMax", 5.0),
-            SettingDouble::Create("xStep", 0.5),
-            SettingDouble::Create("yStep", 0.5),
-            SettingDouble::Create("Elevation", 35.26),
-            SettingDouble::Create("Rotation", -67.5),
-            SettingBool::Create("Draw Contour Lines", true),
-            SettingBool::Create("Shade Surface", true),
-            SettingBool::Create("Draw Outer Box", true),
-        };
-        defaultSettings.AddAll(defaults, 13);
-
-        manager = new SettingsManager(
-            "Cartesian Plot Settings", SETTINGS_3D_CART_APPVAR_NAME, &defaultSettings);
-    }
-
-    ~MenuItem3DCartesianSettings() override {
-        delete manager;
-        while (!defaultSettings.IsEmpty()) {
-            delete defaultSettings.RemoveLast();
-        }
-    }
 
     bool Run() override {
-        manager->Open();
+        Settings::GetRect3Settings().Open();
         return false;
     }
 
     void GetLabel(char* out) override { strcpy(out, "Cartesian Plot Settings\n"); }
-
     void AppendLabel(char* out) override { strcat(out, "Cartesian Plot Settings\n"); }
 };
 }  // namespace bp

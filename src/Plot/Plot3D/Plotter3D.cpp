@@ -5,8 +5,7 @@ namespace bp {
 void Plotter3D::DrawLoadingString() const {
     gfx_SetDrawScreen();
     gfx_SetColor(0x00);
-    gfx_PrintStringXY(
-        LOADING_STRING,
+    gfx_PrintStringXY(LOADING_STRING,
         GFX_LCD_WIDTH - gfx_GetStringWidth(LOADING_STRING) - TEXT_PADDING,
         GFX_LCD_HEIGHT - TEXT_HEIGHT - TEXT_PADDING);
     gfx_SetDrawBuffer();
@@ -57,7 +56,9 @@ bool Plotter3D::GeneratePointMesh(PointMesh& output, VariableRange var1, Variabl
 bool Plotter3D::PlotPoints(PointMesh mesh, Plot3D& plot, BaseColor color) const {
     int meshSize = mesh.width * mesh.height;
     uint8_t contourColor = color;
-    if (sm.GetBool(SHADE_SURFACE)) {
+    bool doShadeSurface = Settings::GetRect3Settings().GetBool(SHADE_SURFACE);
+    bool doContourLines = Settings::GetRect3Settings().GetBool(DRAW_CONTOUR_LINES);
+    if (doShadeSurface) {
         contourColor = 0x00;
     }
     for (int i = 0; i < static_cast<int>(mesh.points.Size()); i++) {
@@ -65,7 +66,7 @@ bool Plotter3D::PlotPoints(PointMesh mesh, Plot3D& plot, BaseColor color) const 
             return true;
         }
         Point3D* corner = mesh.points.Get(i);
-        if (sm.GetBool(DRAW_CONTOUR_LINES)) {
+        if (doContourLines) {
             if (i % mesh.height != 0) {
                 plot.DrawZClippedLine({*corner, *mesh.points.Get(i - 1)}, contourColor);
             }
@@ -73,7 +74,7 @@ bool Plotter3D::PlotPoints(PointMesh mesh, Plot3D& plot, BaseColor color) const 
                 plot.DrawZClippedLine({*corner, *mesh.points.Get(i - mesh.height)}, contourColor);
             }
         }
-        if (sm.GetBool(SHADE_SURFACE)) {
+        if (doShadeSurface) {
             if (i % mesh.height != 0 && i + mesh.height < meshSize) {
                 plot.ShadeTri({*corner, *mesh.points.Get(i - 1), *mesh.points.Get(i + mesh.height)}, color);
             }

@@ -18,18 +18,13 @@
 namespace bp {
 class MainMenu final : public Menu {
     MenuItem2DSettings menuItem2DSettings;
-    MenuItem2DImplicit menuItem2DImplicit{menuItem2DSettings.GetSettingsManager()};
+    MenuItem2DImplicit menuItem2DImplicit;
     MenuItem3DCartesianSettings menuItem3DCartesianSettings;
     MenuItemCylSettings menuItemCylSettings;
     MenuItemParametricSettings menuItemParametricSettings;
     MenuItem3DPlotColorSettings menuItem3DPlotColorSettings;
-
-    MenuItemPlot3D menuItemPlot3D{
-        menuItem3DPlotColorSettings.GetSettingsManager(),
-        menuItem3DCartesianSettings.GetSettingsManager(),
-        menuItemCylSettings.GetSettingsManager(),
-        menuItemParametricSettings.GetSettingsManager()};
-
+    MenuItemPlot3D menuItemPlot3D;
+    
     Menu settingsSelectionMenu{"Settings"};
     MenuItemSubMenu settingsSubMenu{settingsSelectionMenu};
     MenuItemClose menuItemClose;

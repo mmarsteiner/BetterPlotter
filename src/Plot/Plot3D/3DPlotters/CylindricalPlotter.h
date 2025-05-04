@@ -3,22 +3,15 @@
 //
 
 #pragma once
-#include <Parsing/Parser.h>
-#include <Settings/SettingsManager.h>
-#include <Utils/List.h>
-
+#include <Settings/Settings.h>
+#include <ti/tokens.h>
 #include <cmath>
-
-#include "../Plot3D.h"
+#include <Plot/Plot3D/Plotter3D.h>
 
 namespace bp {
 
 class CylindricalPlotter final : public Plotter3D {
-    const SettingsManager& smCyl;
-
     public:
-    CylindricalPlotter(const SettingsManager& sm, const SettingsManager& smCyl)
-        : Plotter3D(sm), smCyl{smCyl} {}
 
     Point3D* CreatePoint(const tiparser::AST* func, double var1, double var2) const override {
         uint8_t vars[2] = {OS_TOK_THETA, OS_TOK_Z};
@@ -29,13 +22,13 @@ class CylindricalPlotter final : public Plotter3D {
 
     void ExtractVariableSettings(VariableRange& output1, VariableRange& output2) const override {
         output1.var = OS_TOK_R;
-        output1.min = smCyl.GetDouble(THETA_MIN);
-        output1.max = smCyl.GetDouble(THETA_MAX);
-        output1.step = smCyl.GetDouble(THETA_STEP);
+        output1.min = Settings::GetCylSettings().GetDouble(THETA_MIN);
+        output1.max = Settings::GetCylSettings().GetDouble(THETA_MAX);
+        output1.step = Settings::GetCylSettings().GetDouble(THETA_STEP);
         output2.var = OS_TOK_Z;
-        output2.min = sm.GetDouble(ZMIN_3);
-        output2.max = sm.GetDouble(ZMAX_3);
-        output2.step = smCyl.GetDouble(ZSTEP);
+        output2.min = Settings::GetRect3Settings().GetDouble(ZMIN_3);
+        output2.max = Settings::GetRect3Settings().GetDouble(ZMAX_3);
+        output2.step = Settings::GetCylSettings().GetDouble(ZSTEP);
     }
 };
 

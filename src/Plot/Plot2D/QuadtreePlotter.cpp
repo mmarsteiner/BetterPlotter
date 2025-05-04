@@ -5,8 +5,7 @@
 #include "QuadtreePlotter.h"
 
 namespace bp {
-void QuadtreePlotter::Recurse(const tiparser::AST* func, Plot2D& plot,
-                              const Region2D& region, uint32_t depth) {
+void QuadtreePlotter::Recurse(const tiparser::AST* func, Plot2D& plot, const Region2D& region, uint32_t depth) {
     if (wasInterrupted) {
         return;
     }
@@ -14,11 +13,11 @@ void QuadtreePlotter::Recurse(const tiparser::AST* func, Plot2D& plot,
         wasInterrupted = true;
         return;
     }
-    if (sm.GetBool(DEBUG_REGIONS_2)) {
+    if (Settings::GetRect2Settings().GetBool(DEBUG_REGIONS_2)) {
         gfx_SetColor(0xE0);
         plot.OutlineRect(region);
     }
-    if (depth < sm.GetUInt(MIN_REC_2)) {
+    if (depth < Settings::GetRect2Settings().GetUInt(MIN_REC_2)) {
         Subdivide(func, plot, region, depth);
     } else {
         double funcVals[4];
@@ -27,7 +26,7 @@ void QuadtreePlotter::Recurse(const tiparser::AST* func, Plot2D& plot,
         if (code == 0 || code == 15) {
             return;
         }
-        if (depth < sm.GetUInt(MAX_REC_2)) {
+        if (depth < Settings::GetRect2Settings().GetUInt(MAX_REC_2)) {
             Subdivide(func, plot, region, depth);
         } else {
             gfx_SetColor(0x18);
@@ -62,8 +61,7 @@ void QuadtreePlotter::PlotInRegion(double* funcVals, Plot2D& plot,
     Point2D topLeft = {region.start.x, region.start.y};
     Point2D topRight = {region.start.x + region.width, region.start.y};
     Point2D bottomLeft = {region.start.x, region.start.y - region.height};
-    Point2D bottomRight = {region.start.x + region.width,
-                           region.start.y - region.height};
+    Point2D bottomRight = {region.start.x + region.width, region.start.y - region.height};
 
     uint8_t code = GetCase(funcVals);
 
@@ -71,26 +69,22 @@ void QuadtreePlotter::PlotInRegion(double* funcVals, Plot2D& plot,
     if (code == 1 || code == 14) {
         t1 = GetT(funcVals[0], funcVals[3]);
         t2 = GetT(funcVals[3], funcVals[2]);
-        Line2D line = {LinearInterpolate(topLeft, bottomLeft, t1),
-                       LinearInterpolate(bottomLeft, bottomRight, t2)};
+        Line2D line = {LinearInterpolate(topLeft, bottomLeft, t1), LinearInterpolate(bottomLeft, bottomRight, t2)};
         plot.DrawLine(line);
     } else if (code == 2 || code == 13) {
         t1 = GetT(funcVals[1], funcVals[2]);
         t2 = GetT(funcVals[3], funcVals[2]);
-        Line2D line = {LinearInterpolate(topRight, bottomRight, t1),
-                       LinearInterpolate(bottomLeft, bottomRight, t2)};
+        Line2D line = {LinearInterpolate(topRight, bottomRight, t1), LinearInterpolate(bottomLeft, bottomRight, t2)};
         plot.DrawLine(line);
     } else if (code == 3 || code == 12) {
         t1 = GetT(funcVals[0], funcVals[3]);
         t2 = GetT(funcVals[1], funcVals[2]);
-        Line2D line = {LinearInterpolate(topLeft, bottomLeft, t1),
-                       LinearInterpolate(topRight, bottomRight, t2)};
+        Line2D line = {LinearInterpolate(topLeft, bottomLeft, t1), LinearInterpolate(topRight, bottomRight, t2)};
         plot.DrawLine(line);
     } else if (code == 4 || code == 11) {
         t1 = GetT(funcVals[0], funcVals[1]);
         t2 = GetT(funcVals[1], funcVals[2]);
-        Line2D line = {LinearInterpolate(topLeft, topRight, t1),
-                       LinearInterpolate(topRight, bottomRight, t2)};
+        Line2D line = {LinearInterpolate(topLeft, topRight, t1), LinearInterpolate(topRight, bottomRight, t2)};
         plot.DrawLine(line);
     } else if (code == 5 || code == 10) {
         t1 = GetT(funcVals[0], funcVals[1]);
@@ -117,20 +111,17 @@ void QuadtreePlotter::PlotInRegion(double* funcVals, Plot2D& plot,
     } else if (code == 6 || code == 9) {
         t1 = GetT(funcVals[0], funcVals[1]);
         t2 = GetT(funcVals[3], funcVals[2]);
-        Line2D line = {LinearInterpolate(topLeft, topRight, t1),
-                       LinearInterpolate(bottomLeft, bottomRight, t2)};
+        Line2D line = {LinearInterpolate(topLeft, topRight, t1), LinearInterpolate(bottomLeft, bottomRight, t2)};
         plot.DrawLine(line);
     } else if (code == 7 || code == 8) {
         t1 = GetT(funcVals[0], funcVals[1]);
         t2 = GetT(funcVals[0], funcVals[3]);
-        Line2D line = {LinearInterpolate(topLeft, topRight, t1),
-                       LinearInterpolate(topLeft, bottomLeft, t2)};
+        Line2D line = {LinearInterpolate(topLeft, topRight, t1), LinearInterpolate(topLeft, bottomLeft, t2)};
         plot.DrawLine(line);
     }
 }
 
-void QuadtreePlotter::GetCornerVals(const tiparser::AST* func,
-                                    const Region2D& region, double* out) {
+void QuadtreePlotter::GetCornerVals(const tiparser::AST* func, const Region2D& region, double* out) {
     uint8_t vars[2] = {OS_TOK_X, OS_TOK_Y};
     double vVals[2] = {region.start.x, region.start.y};
     out[0] = func->Eval(2, vars, vVals);
@@ -159,14 +150,11 @@ Point2D QuadtreePlotter::LinearInterpolate(const Point2D& p0, const Point2D& p1,
     return {(1 - t) * p0.x + t * p1.x, (1 - t) * p0.y + t * p1.y};
 }
 
-QuadtreePlotter::QuadtreePlotter(const SettingsManager& sm)
-    : wasInterrupted(false), sm{sm} {}
-
 bool QuadtreePlotter::plotImplicit(const tiparser::AST* func, Plot2D& plot) {
     wasInterrupted = false;
-    Region2D startRegion = {{sm.GetDouble(XMIN_2), sm.GetDouble(XMAX_2)},
-                            sm.GetDouble(XMAX_2) - sm.GetDouble(XMIN_2),
-                            sm.GetDouble(YMAX_2) - sm.GetDouble(YMIN_2)};
+    Region2D startRegion = {{Settings::GetRect2Settings().GetDouble(XMIN_2), Settings::GetRect2Settings().GetDouble(XMAX_2)},
+                            Settings::GetRect2Settings().GetDouble(XMAX_2) - Settings::GetRect2Settings().GetDouble(XMIN_2),
+                            Settings::GetRect2Settings().GetDouble(YMAX_2) - Settings::GetRect2Settings().GetDouble(YMIN_2)};
     Recurse(func, plot, startRegion, 0);
     return wasInterrupted;
 }

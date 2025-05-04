@@ -20,7 +20,6 @@ namespace bp {
  */
 class Plotter3D {
     protected:
-    const SettingsManager& sm;
     /**
      * Represents a "rectangular" mesh of points in 3D space where each point should be "connected" to the adjacent points
      */
@@ -94,7 +93,6 @@ class Plotter3D {
     bool PlotPoints(PointMesh mesh, Plot3D& plot, BaseColor color) const;
 
     public:
-    explicit Plotter3D(const SettingsManager& sm) : sm{sm} {}
     virtual ~Plotter3D() = default;
 
     /**

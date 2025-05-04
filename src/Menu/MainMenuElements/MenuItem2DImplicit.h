@@ -11,21 +11,15 @@
 namespace bp {
 
 class MenuItem2DImplicit final : public MenuItem {
-    Plot2D plot;
-    const SettingsManager& sm;
 
     public:
-    explicit MenuItem2DImplicit(const SettingsManager& sm) : plot(sm), sm{sm} {}
-
-    ~MenuItem2DImplicit() override {}
-
     bool Run() override {
+        Plot2D plot;
         plot.Open();
         tiparser::Parser parser;
         tiparser::AST* func = parser.Parse(OS_VAR_Y1);
-        QuadtreePlotter plotter(sm);
+        QuadtreePlotter plotter;
         bool interrupted = plotter.plotImplicit(func, plot);
-        dbg_printf("Done plotting, interrupted: %d\n", interrupted);
         if (!interrupted) {
             while (os_GetCSC() != sk_Clear) {
             }
@@ -35,7 +29,6 @@ class MenuItem2DImplicit final : public MenuItem {
     }
 
     void GetLabel(char* out) override { strcpy(out, "Plot 2D y1(x,y)=0"); }
-
     void AppendLabel(char* out) override { strcat(out, "Plot 2D y1(x,y)=0"); }
 };
 

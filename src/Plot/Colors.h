@@ -8,13 +8,15 @@
 #include <cstdint>
 
 namespace bp {
-enum BaseColor { BLACK,
-                 BLUE,
-                 RED,
-                 MAGENTA,
-                 GREEN,
-                 ORANGE,
-                 BROWN };
+enum BaseColor { 
+    BLACK,
+    BLUE,
+    RED,
+    MAGENTA,
+    GREEN,
+    ORANGE,
+    BROWN 
+};
 
 struct RGBColor {
     uint8_t R;

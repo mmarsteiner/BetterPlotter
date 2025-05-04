@@ -2,17 +2,16 @@
 
 #include <Settings/SettingsManager.h>
 #include <Utils/List.h>
+#include <Parsing/Parser.h>
+#include <Plot/Plot3D/Plotter3D.h>
 
 namespace bp {
 
 class ParaSurfacePlotter final : public Plotter3D {
-    const SettingsManager& smPara;
     // TODO: Resolve const stuff to fix this mess
     mutable const tiparser::AST_Triple_Expr* tripleFunc;
 
     public:
-    ParaSurfacePlotter(const SettingsManager& sm, const SettingsManager& smPara) : Plotter3D(sm), smPara{smPara} {}
-
     bool Plot(const tiparser::AST* func, Plot3D& plot, BaseColor color) const override {
         tripleFunc = dynamic_cast<const tiparser::AST_Triple_Expr*>(func);
         if (tripleFunc == nullptr) {
@@ -32,13 +31,13 @@ class ParaSurfacePlotter final : public Plotter3D {
 
     void ExtractVariableSettings(VariableRange& output1, VariableRange& output2) const override {
         output1.var = OS_TOK_S;
-        output1.min = smPara.GetDouble(SMIN);
-        output1.max = smPara.GetDouble(SMAX);
-        output1.step = smPara.GetDouble(SSTEP);
+        output1.min = Settings::GetParaSettings().GetDouble(SMIN);
+        output1.max = Settings::GetParaSettings().GetDouble(SMAX);
+        output1.step = Settings::GetParaSettings().GetDouble(SSTEP);
         output2.var = OS_TOK_T;
-        output2.min = sm.GetDouble(TMIN);
-        output2.max = sm.GetDouble(TMAX);
-        output2.step = smPara.GetDouble(TSTEP);
+        output2.min = Settings::GetRect3Settings().GetDouble(TMIN);
+        output2.max = Settings::GetRect3Settings().GetDouble(TMAX);
+        output2.step = Settings::GetParaSettings().GetDouble(TSTEP);
     }
 };
 

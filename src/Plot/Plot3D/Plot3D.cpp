@@ -17,7 +17,7 @@ double Plot3D::GetFrontalProjection(const Point3D& in, Point2D& output) const {
     double p1_y = in.x * sinR + in.y * cosR;
     double p0_y = p1_y * cosE - in.z * sinE;
     double pointScaleProj =
-        /*sm.GetDouble(SCREEN_SCALE)*/ 1 *
+        /*Settings::GetRect3Settings().GetDouble(SCREEN_SCALE)*/ 1 *
         (1 / (p0_y - p0yMin + (p0yMax - p0yMin) /*Makes it so that */));
     output.x = pointScaleProj * (in.x * cosR - in.y * sinR);
     output.y = pointScaleProj * (p1_y * sinE + in.z * cosE);
@@ -44,19 +44,19 @@ void Plot3D::ConvertPointPerspective(const Point3D& in,
 }
 
 bool Plot3D::AboveZMax(double z) const {
-    return z - sm.GetDouble(ZMAX_3) > 1e-6;
+    return z - Settings::GetRect3Settings().GetDouble(ZMAX_3) > 1e-6;
 }
 
 bool Plot3D::BelowZMin(double z) const {
-    return z - sm.GetDouble(ZMIN_3) < -1e-6;
+    return z - Settings::GetRect3Settings().GetDouble(ZMIN_3) < -1e-6;
 }
 
 bool Plot3D::WithinXBounds(double x) const {
-    return !(x - sm.GetDouble(XMAX_3) > 1e-6) && !(x - sm.GetDouble(XMIN_3) < -1e-6);
+    return !(x - Settings::GetRect3Settings().GetDouble(XMAX_3) > 1e-6) && !(x - Settings::GetRect3Settings().GetDouble(XMIN_3) < -1e-6);
 }
 
 bool Plot3D::WithinYBounds(double y) const {
-    return !(y - sm.GetDouble(YMAX_3) > 1e-6) && !(y - sm.GetDouble(YMIN_3) < -1e-6);
+    return !(y - Settings::GetRect3Settings().GetDouble(YMAX_3) > 1e-6) && !(y - Settings::GetRect3Settings().GetDouble(YMIN_3) < -1e-6);
 }
 
 bool Plot3D::WithinZBounds(double z) const {
@@ -81,7 +81,6 @@ double Plot3D::GetLightingFactor(const Tri3D& tri) const {
     // check to make sure normal vector is facing the right direction
     double sign = 1.0;
     double convertedY = (cpx * sinR + cpy * cosR) * cosE - cpz * sinE;
-    // dbg_printf("Converted y=%.3f\n", convertedY);
     if (convertedY > 0) {
         sign = -1.0;
     }
@@ -98,15 +97,14 @@ uint8_t Plot3D::GetShadeColor(double lightingFactor, BaseColor baseColor) {
 }
 
 void Plot3D::Open() {
-    double xMin = sm.GetDouble(XMIN_3);
-    double xMax = sm.GetDouble(XMAX_3);
-    double yMin = sm.GetDouble(YMIN_3);
-    double yMax = sm.GetDouble(YMAX_3);
-    double zMin = sm.GetDouble(ZMIN_3);
-    double zMax = sm.GetDouble(ZMAX_3);
-
-    double R = sm.GetDouble(ROTATION_3) * DEG_CONVERSION;
-    double E = sm.GetDouble(ELEVATION_3) * DEG_CONVERSION;
+    double xMin = Settings::GetRect3Settings().GetDouble(XMIN_3);
+    double xMax = Settings::GetRect3Settings().GetDouble(XMAX_3);
+    double yMin = Settings::GetRect3Settings().GetDouble(YMIN_3);
+    double yMax = Settings::GetRect3Settings().GetDouble(YMAX_3);
+    double zMin = Settings::GetRect3Settings().GetDouble(ZMIN_3);
+    double zMax = Settings::GetRect3Settings().GetDouble(ZMAX_3);
+    double R = Settings::GetRect3Settings().GetDouble(ROTATION_3) * DEG_CONVERSION;
+    double E = Settings::GetRect3Settings().GetDouble(ELEVATION_3) * DEG_CONVERSION;
     sinR = sin(R);
     cosR = cos(R);
     sinE = sin(E);
@@ -178,7 +176,7 @@ void Plot3D::Open() {
     pixelsPerX = TRUE_3D_WIDTH / (xMaxFrontal - xMinFrontal);
     pixelsPerY = TRUE_3D_WIDTH / (yMaxFrontal - yMinFrontal);
 
-    if (sm.GetBool(DRAW_OUTER_BOX)) {
+    if (Settings::GetRect3Settings().GetBool(DRAW_OUTER_BOX)) {
         Line3D xLine = {{xMin, yMin, zMin}, {xMax, yMin, zMin}};
         DrawLine(xLine, 0x00);
         xLine.Translate({0, length, 0});
@@ -218,36 +216,30 @@ void Plot3D::Open() {
     Point3D xLabelLoc = {xMax + 0.05 * width, 0, 0};
     PointGFX xLabelScreenLoc;
     GetScreenCoords(xLabelLoc, xLabelScreenLoc);
-    gfx_PrintStringXY("X", xLabelScreenLoc.x - gfx_GetStringWidth("X") / 2,
-                      xLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("X", xLabelScreenLoc.x - gfx_GetStringWidth("X") / 2, xLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetDrawBuffer();
     gfx_SetColor(xLabelScreenLoc.depth);
-    gfx_PrintStringXY("X", xLabelScreenLoc.x - gfx_GetStringWidth("X") / 2,
-                      xLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("X", xLabelScreenLoc.x - gfx_GetStringWidth("X") / 2, xLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetColor(0x00);
     gfx_SetDrawScreen();
 
     Point3D yLabelLoc = {0, yMax + 0.05 * length, 0};
     PointGFX yLabelScreenLoc;
     GetScreenCoords(yLabelLoc, yLabelScreenLoc);
-    gfx_PrintStringXY("Y", yLabelScreenLoc.x - gfx_GetStringWidth("Y") / 2,
-                      yLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("Y", yLabelScreenLoc.x - gfx_GetStringWidth("Y") / 2, yLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetDrawBuffer();
     gfx_SetColor(yLabelScreenLoc.depth);
-    gfx_PrintStringXY("Y", yLabelScreenLoc.x - gfx_GetStringWidth("Y") / 2,
-                      yLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("Y", yLabelScreenLoc.x - gfx_GetStringWidth("Y") / 2, yLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetColor(0x00);
     gfx_SetDrawScreen();
 
     Point3D zLabelLoc = {0, 0, zMax + 0.05 * height};
     PointGFX zLabelScreenLoc;
     GetScreenCoords(zLabelLoc, zLabelScreenLoc);
-    gfx_PrintStringXY("Z", zLabelScreenLoc.x - gfx_GetStringWidth("Z") / 2,
-                      zLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("Z", zLabelScreenLoc.x - gfx_GetStringWidth("Z") / 2, zLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetDrawBuffer();
     gfx_SetColor(zLabelScreenLoc.depth);
-    gfx_PrintStringXY("Z", zLabelScreenLoc.x - gfx_GetStringWidth("Z") / 2,
-                      zLabelScreenLoc.y - TEXT_HEIGHT / 2);
+    gfx_PrintStringXY("Z", zLabelScreenLoc.x - gfx_GetStringWidth("Z") / 2, zLabelScreenLoc.y - TEXT_HEIGHT / 2);
     gfx_SetColor(0x00);
     gfx_SetDrawScreen();
 
@@ -274,30 +266,30 @@ void Plot3D::DrawZClippedLine(const Line3D& line, uint8_t color) {
     }
     // line crosses clipping zone but both endpoints are outside the zone
     if (!WithinZBounds(p0.z) && !WithinZBounds(p1.z)) {
-        Point3D newP0 = InterpolateByZ(p0, p1, sm.GetDouble(ZMAX_3));
-        Point3D newP1 = InterpolateByZ(p0, p1, sm.GetDouble(ZMIN_3));
+        Point3D newP0 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMAX_3));
+        Point3D newP1 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMIN_3));
         DrawLine({newP0, newP1}, color);
         return;
     }
     // one inside and one above
     if (AboveZMax(p0.z) && WithinZBounds(p1.z)) {
-        Point3D newP0 = InterpolateByZ(p0, p1, sm.GetDouble(ZMAX_3));
+        Point3D newP0 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMAX_3));
         DrawLine({newP0, p1}, color);
         return;
     }
     if (AboveZMax(p1.z) && WithinZBounds(p0.z)) {
-        Point3D newP1 = InterpolateByZ(p0, p1, sm.GetDouble(ZMAX_3));
+        Point3D newP1 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMAX_3));
         DrawLine({p0, newP1}, color);
         return;
     }
     // one inside and one below
     if (BelowZMin(p0.z) && WithinZBounds(p1.z)) {
-        Point3D newP0 = InterpolateByZ(p0, p1, sm.GetDouble(ZMIN_3));
+        Point3D newP0 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMIN_3));
         DrawLine({newP0, p1}, color);
         return;
     }
     if (BelowZMin(p1.z) && WithinZBounds(p0.z)) {
-        Point3D newP1 = InterpolateByZ(p0, p1, sm.GetDouble(ZMIN_3));
+        Point3D newP1 = InterpolateByZ(p0, p1, Settings::GetRect3Settings().GetDouble(ZMIN_3));
         DrawLine({p0, newP1}, color);
         return;
     }
@@ -322,12 +314,10 @@ void Plot3D::ShadeTri(const Tri3D& tri, BaseColor baseColor) {
     if (lf < 0) {
         lf = 0;
     }
-    // dbg_printf("%f\n", lf);
     PointGFX p0, p1, p2;
     GetScreenCoords(tri.p0, p0);
     GetScreenCoords(tri.p1, p1);
     GetScreenCoords(tri.p2, p2);
-    // dbg_printf("%.2f, %.2f, %.2f\n", p0.depth, p1.depth, p2.depth);
     RasterizeTri({p0, p1, p2}, GetShadeColor(lf, baseColor));
 }
 }  // namespace bp

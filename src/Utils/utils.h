@@ -19,8 +19,7 @@ void DoubleToString(double d, char *out);
 void BoolToString(bool b, char *out);
 int GetNumFromKeyCode(sk_key_t key);
 void DebugPrintByte(unsigned char byte);
-void ClearNChars(
-    size_t numChars);  // prints N clear characters at the current cursor pos
+void ClearNChars(size_t numChars);  // prints N clear characters at the current cursor pos
 uint32_t StrToUInt(const char *str);
 double StrToDouble(const char *str);
 }  // namespace bp

@@ -12,15 +12,11 @@
 
 namespace bp {
 
-Plotter3D* CreatePlotter(PlotType3D type, const SettingsManager& cartSm, const SettingsManager& cylSm, const SettingsManager& paraSm);
+Plotter3D* CreatePlotter(PlotType3D type);
 
 class MenuItemPlot3D final : public MenuItem {
     private:
     Plot3D plot;
-    const SettingsManager& colorSm;
-    const SettingsManager& cartSm;
-    const SettingsManager& cylSm;
-    const SettingsManager& paraSm;
 
     const char* GetVarName(int varNum) {
         switch (varNum) {
@@ -43,28 +39,22 @@ class MenuItemPlot3D final : public MenuItem {
     }
 
     public:
-    MenuItemPlot3D(const SettingsManager& colorSettings, const SettingsManager& cartSettings, const SettingsManager& cylSettings, const SettingsManager& paraSettings)
-        : plot{cartSettings}, colorSm{colorSettings}, cartSm{cartSettings}, cylSm{cylSettings}, paraSm{paraSettings} {
-    }
-    ~MenuItemPlot3D() {
-    }
-
     bool Run() override {
         bool wasInterrupted = false;
         plot.Open();
         for (int i = 1; i <= 7 && !wasInterrupted; i++) {
             // Collect data about the surface to plot
-            PlotType3D type = static_cast<PlotType3D>(colorSm.GetUInt((i - 1) * 2));
+            PlotType3D type = static_cast<PlotType3D>(Settings::GetColorPlotSettings().GetUInt((i - 1) * 2));
             if (type == OFF) {
                 continue;
             }
-            BaseColor color = static_cast<BaseColor>(colorSm.GetUInt(2 * i - 1));
+            BaseColor color = static_cast<BaseColor>(Settings::GetColorPlotSettings().GetUInt(2 * i - 1));
             tiparser::Parser parser;
             tiparser::AST* toPlot = parser.Parse(GetVarName(i));
             if (toPlot == nullptr) {
                 continue;
             }
-            Plotter3D* plotter = CreatePlotter(type, cartSm, cylSm, paraSm);
+            Plotter3D* plotter = CreatePlotter(type);
             wasInterrupted = plotter->Plot(toPlot, plot, color);
             delete plotter;
             delete toPlot;
@@ -86,13 +76,13 @@ class MenuItemPlot3D final : public MenuItem {
     }
 };
 
-Plotter3D* CreatePlotter(PlotType3D type, const SettingsManager& cartSm, const SettingsManager& cylSm, const SettingsManager& paraSm) {
+Plotter3D* CreatePlotter(PlotType3D type) {
     if (type == CARTESIAN) {
-        return new Cartesian3DPlotter(cartSm);
+        return new Cartesian3DPlotter;
     } else if (type == CYLINDRICAL) {
-        return new CylindricalPlotter(cartSm, cylSm);
+        return new CylindricalPlotter;
     } else if (type == PARA_SURF) {
-        return new ParaSurfacePlotter(cartSm, paraSm);
+        return new ParaSurfacePlotter;
     } else {
         return nullptr;
     }

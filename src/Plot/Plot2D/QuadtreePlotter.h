@@ -10,8 +10,7 @@
 
 namespace bp {
 class QuadtreePlotter {
-    bool wasInterrupted;
-    const SettingsManager& sm;
+    bool wasInterrupted {false};
 
     void Recurse(const tiparser::AST* func, Plot2D& plot, const Region2D& region, uint32_t depth);
     void Subdivide(const tiparser::AST* func, Plot2D& plot, const Region2D& region, uint32_t depth);
@@ -24,7 +23,6 @@ class QuadtreePlotter {
     static Point2D LinearInterpolate(const Point2D& p0, const Point2D& p1, double t);
 
     public:
-    explicit QuadtreePlotter(const SettingsManager& sm);
     bool plotImplicit(const tiparser::AST* func, Plot2D& plot);
 };
 }  // namespace bp

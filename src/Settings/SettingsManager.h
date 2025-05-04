@@ -26,26 +26,23 @@ class SettingsManager {
     List<Setting> defaultSettings{};
 
     Setting *GetSelectedSetting() const;
-
     uint8_t GetSelectedRow() const { return selectedIdx - scrollOffset + 1; }
-
     void DrawMenu() const;
-
     void StoreSettings() const;
-
     void RetrieveSettings();
-
     void OverwriteWithDefaults();
 
-    public:
     SettingsManager(const char *title, const char *appVarName,
-                    const List<Setting> *defaultSettings);
+        const List<Setting> *defaultSettings);
 
+    public:
+    SettingsManager(const SettingsManager&) = delete;
     ~SettingsManager();
 
     void Open();
 
     double GetDouble(int idx) const {
+        dbg_printf("GetDouble()\n");
         return dynamic_cast<SettingDouble *>(settings.Get(idx))->val;
     }
 
@@ -60,5 +57,7 @@ class SettingsManager {
     List<Setting> *GetSettings() { return &settings; }
 
     void TestSettings() const;
+
+    friend class Settings;
 };
 }  // namespace bp
