@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Mat4.h"
+#include "Math/Mat4.h"
 
 namespace g3d {
 
