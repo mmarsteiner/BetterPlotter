@@ -53,66 +53,10 @@ struct Line2D {
     }
 };
 
-struct Point3D {
-    double x;
-    double y;
-    double z;
-    Point3D(double x, double y, double z) : x{x}, y{y}, z{z} {}
-};
-
-struct Tri3D {
-    Point3D p0{0, 0, 0};
-    Point3D p1{0, 0, 0};
-    Point3D p2{0, 0, 0};
-    Tri3D(const Point3D& p0, const Point3D& p1, const Point3D& p2)
-        : p0{p0}, p1{p1}, p2{p2} {}
-};
-
-struct Line3D {
-    Point3D start{0, 0, 0};
-    Point3D finish{0, 0, 0};
-    Line3D(const Point3D& start, const Point3D& finish)
-        : start{start}, finish{finish} {}
-    Line3D(double x1, double y1, double z1, double x2, double y2, double z2) {
-        start.x = x1;
-        start.y = y1;
-        start.z = z1;
-        finish.x = x2;
-        finish.y = y2;
-        finish.z = z2;
-    }
-    void Translate(const Point3D& vec) {
-        start.x += vec.x;
-        finish.x += vec.x;
-        start.y += vec.y;
-        finish.y += vec.y;
-        start.z += vec.z;
-        finish.z += vec.z;
-    }
-};
-
 struct LineGFX {
     PointGFX start;
     PointGFX finish;
     LineGFX(const PointGFX& start, const PointGFX& finish)
         : start{start}, finish{finish} {}
-};
-
-struct TriGFX {
-    PointGFX p0;
-    PointGFX p1;
-    PointGFX p2;
-    TriGFX(const PointGFX& p0, const PointGFX& p1, const PointGFX& p2)
-        : p0{p0}, p1{p1}, p2{p2} {}
-    void dbg_print(bool newLine) const {
-        p0.dbg_print(false);
-        dbg_printf(" -> ");
-        p1.dbg_print(false);
-        dbg_printf(" -> ");
-        p2.dbg_print(false);
-        if (newLine) {
-            dbg_printf("\n");
-        }
-    }
 };
 }  // namespace bp
