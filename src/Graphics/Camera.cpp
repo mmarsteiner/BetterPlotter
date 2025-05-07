@@ -11,10 +11,10 @@ void Camera::CreateViewMatrix(Mat4& out) {
     Mat4::CreateTranslationMatrix(antiTranslation, -x, -y, -z);
     // un-pitch camera
     Mat4 antiPitch;
-    Mat4::CreateRotationMatrixY(antiPitch, -pitch);
+    Mat4::CreateRotationMatrixX(antiPitch, -pitch);
     // un-yaw camera
     Mat4 antiYaw;
-    Mat4::CreateRotationMatrixZ(antiYaw, -yaw);
+    Mat4::CreateRotationMatrixY(antiYaw, -yaw);
     // final = antiYaw * antiPitch * antiTranslation
     Mat4 antiRotation;
     antiYaw.Multiply(antiPitch, antiRotation);
