@@ -22,7 +22,8 @@ public:
      * @param pitch pitch of the camera (rotation around its horizontal  
      *              X axis), applied first
      */
-    Camera(double x, double y, double z, double yaw, double pitch);
+    Camera(double x, double y, double z, double yaw, double pitch)
+        : x{x}, y{y}, z{z}, pitch{pitch}, yaw{yaw} {}
     /**
      * Creates the matrix that transforms from world space to view space. 
      * This matrix transforms the camera from its location to be at the 
@@ -31,7 +32,21 @@ public:
      * @param out Reference to the output location. The constructed view 
      *            matrix will be placed here.
      */
-    void CreateViewMatrix(Mat4& out);
+    void CreateViewMatrix(Mat4& out) {
+        // translate camera back to (0, 0)
+        Mat4 antiTranslation;
+        Mat4::CreateTranslationMatrix(antiTranslation, -x, -y, -z);
+        // un-pitch camera
+        Mat4 antiPitch;
+        Mat4::CreateRotationMatrixX(antiPitch, -pitch);
+        // un-yaw camera
+        Mat4 antiYaw;
+        Mat4::CreateRotationMatrixY(antiYaw, -yaw);
+        // final = antiYaw * antiPitch * antiTranslation
+        Mat4 antiRotation;
+        antiYaw.Multiply(antiPitch, antiRotation);
+        antiRotation.Multiply(antiTranslation, out);
+    }
 };
 
 }
