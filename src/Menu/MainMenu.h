@@ -6,7 +6,6 @@
 
 #include "MainMenuElements/MenuItem2DImplicit.h"
 #include "MainMenuElements/MenuItemClose.h"
-#include "MainMenuElements/MenuItemPlot3D.h"
 #include "MainMenuElements/MenuItemSubMenu.h"
 #include "MainMenuElements/Settings/MenuItem2DSettings.h"
 #include "MainMenuElements/Settings/MenuItem3DCartesianSettings.h"
@@ -23,7 +22,6 @@ class MainMenu final : public Menu {
     MenuItemCylSettings menuItemCylSettings;
     MenuItemParametricSettings menuItemParametricSettings;
     MenuItem3DPlotColorSettings menuItem3DPlotColorSettings;
-    MenuItemPlot3D menuItemPlot3D;
     
     Menu settingsSelectionMenu{"Settings"};
     MenuItemSubMenu settingsSubMenu{settingsSelectionMenu};
@@ -37,7 +35,6 @@ class MainMenu final : public Menu {
         settingsSelectionMenu.AddMenuItem(menuItemCylSettings);
         settingsSelectionMenu.AddMenuItem(menuItemParametricSettings);
         AddMenuItem(menuItem2DImplicit);
-        AddMenuItem(menuItemPlot3D);
         AddMenuItem(settingsSubMenu);
         AddMenuItem(menuItemClose);
     }
