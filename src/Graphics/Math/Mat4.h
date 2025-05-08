@@ -1,5 +1,7 @@
 #pragma once
 
+#include <graphx.h>
+
 #include <cstring>
 #include <cmath>
 
@@ -20,6 +22,7 @@ class Mat4 {
     static void CreateRotationMatrixY(Mat4& out, double theta);
     static void CreateRotationMatrixZ(Mat4& out, double theta);
     static void CreatePerspectiveMatrix(Mat4& out, double near, double far, double right, double left, double top, double bottom);
+    static void CreateScreenMatrix(Mat4& out, int width, int height, int x0, int y0);
 };
 
 }

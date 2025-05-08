@@ -85,4 +85,12 @@ void Mat4::CreatePerspectiveMatrix(Mat4& out, double near, double far, double ri
     out.data[15] = 0;                          // [3][3]
 }
 
+void Mat4::CreateScreenMatrix(Mat4& out, int width, int height, int x0, int y0) {
+    CreateIdentityMatrix(out);
+    out.data[0] = width / 2;
+    out.data[3] = (width / 2) + x0;
+    out.data[5] = -height / 2;
+    out.data[7] = (height / 2) + y0;
+}
+
 }  // namespace g3d
