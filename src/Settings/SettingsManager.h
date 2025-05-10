@@ -42,7 +42,6 @@ class SettingsManager {
     void Open();
 
     double GetDouble(int idx) const {
-        dbg_printf("GetDouble()\n");
         return dynamic_cast<SettingDouble *>(settings.Get(idx))->val;
     }
 

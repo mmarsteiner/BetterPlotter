@@ -81,3 +81,19 @@ double bp::StrToDouble(const char *str) {
     const real_t tmp = os_StrToReal(str, nullptr);
     return os_RealToFloat(&tmp);
 }
+
+double bp::fmax3(double d1, double d2, double d3) {
+    if (d1 > d2) {
+        if (d1 > d3) {
+            return d1;
+        } else {
+            return d3;
+        }
+    } else {
+        if (d2 > d3) {
+            return d2;
+        } else {
+            return d3;
+        }
+    }
+}

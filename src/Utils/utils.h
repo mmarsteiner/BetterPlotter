@@ -22,4 +22,5 @@ void DebugPrintByte(unsigned char byte);
 void ClearNChars(size_t numChars);  // prints N clear characters at the current cursor pos
 uint32_t StrToUInt(const char *str);
 double StrToDouble(const char *str);
+double fmax3(double d1, double d2, double d3);
 }  // namespace bp
