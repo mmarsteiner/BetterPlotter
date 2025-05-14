@@ -6,16 +6,20 @@
 #include <Plot/Colors.h>
 #include <Settings/Settings.h>
 #include <Graphics/Renderer.h>
+#include <Graphics/Axes.h>
+#include <Graphics/BoundingBox.h>
 #include <graphx.h>
+#include <Graphics/Mesh.h>
+#include <cmath>
 
 int main() {
     bp::Settings::InitSettings();
     tiparser::AST::InitOpPtrs();
-    bp::InitCustomPalette();
+    //bp::InitCustomPalette();
     //bp::MainMenu menu;
     //menu.Run();
 
-    // Graphics test code that displays the coordinate axes rotating in the xy plane
+    // Graphics test code that displays a plot rotating in 3D space
     bp::SettingsManager& s3 = bp::Settings::GetRect3Settings();
     g3d::Vec4 xMax(s3.GetDouble(bp::XMAX_3), 0, 0, 1);
     g3d::Vec4 xMin(s3.GetDouble(bp::XMIN_3), 0, 0, 1);
@@ -25,25 +29,38 @@ int main() {
     g3d::Vec4 zMin(0, 0, s3.GetDouble(bp::ZMIN_3), 1);
 
     double elevation = s3.GetDouble(bp::ELEVATION_3);
+    double xStep = s3.GetDouble(bp::XSTEP_3);
+    double yStep = s3.GetDouble(bp::YSTEP_3);
+
+    g3d::Renderer renderer;
+
+    g3d::Mesh testMesh;
+    for (double x = xMin.x; x <= xMax.x; x += xStep) {
+        testMesh.AddRow();
+        for (double y = yMin.y; y <= yMax.y; y += yStep) {
+            testMesh.AddPoint(x, y, sin((M_PI * x) / 4.0) * sin((M_PI * y) / 4.0));
+        }
+    }
+    testMesh.UpdateVisibility(renderer);
+    testMesh.UpdateColor(renderer);
+    g3d::Axes axes;
+    g3d::BoundingBox boundingBox;
 
     os_ClrHomeFull();
     gfx_Begin();
+    renderer.Init3DColors();
+
     gfx_SetDrawBuffer();
-    g3d::Renderer renderer;
-    for (int rotation = 0; rotation < 360; ++rotation) {
+    for (int rotation = -67; rotation < 360 - 67; rotation += 7) {
         if (os_GetCSC() == sk_Clear) {
             break;
         }
-
         renderer.UpdateVPSMatrix(rotation, elevation);
 
-        gfx_FillScreen(gfx_white);
-        gfx_SetColor(gfx_red);
-        renderer.RenderLine(xMin, xMax);
-        gfx_SetColor(gfx_green);
-        renderer.RenderLine(yMin, yMax);
-        gfx_SetColor(gfx_blue);
-        renderer.RenderLine(zMin, zMax);
+        gfx_FillScreen(CUSTOM_WHITE);
+        testMesh.Render(renderer);
+        axes.Render(renderer);
+        boundingBox.Render(renderer);
 
         gfx_SwapDraw();
     }
