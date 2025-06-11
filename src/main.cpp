@@ -15,7 +15,6 @@
 int main() {
     bp::Settings::InitSettings();
     tiparser::AST::InitOpPtrs();
-    //bp::InitCustomPalette();
     //bp::MainMenu menu;
     //menu.Run();
 
@@ -51,23 +50,32 @@ int main() {
     renderer.Init3DColors();
 
     gfx_SetDrawBuffer();
-    for (int rotation = -67; rotation < 360 - 67; rotation += 7) {
-        if (os_GetCSC() == sk_Clear) {
-            break;
+    gfx_FillScreen(CUSTOM_WHITE);
+    testMesh.Render(renderer);
+    axes.Render(renderer);
+    boundingBox.Render(renderer);
+    gfx_SwapDraw();
+
+    // process rotations
+    uint8_t key;
+    int rotation = -67;
+    while((key = os_GetCSC()) != sk_Clear) {
+        if (key == sk_Left || key == sk_Right) {
+            if (key == sk_Left) {
+                rotation -= 7;
+                renderer.UpdateVPSMatrix(rotation, elevation);
+            } else if (key == sk_Right) {
+                rotation += 7;
+                renderer.UpdateVPSMatrix(rotation, elevation);
+            }
+            gfx_FillScreen(CUSTOM_WHITE);
+            testMesh.Render(renderer);
+            axes.Render(renderer);
+            boundingBox.Render(renderer);
+            gfx_SwapDraw();
         }
-        renderer.UpdateVPSMatrix(rotation, elevation);
-
-        gfx_FillScreen(CUSTOM_WHITE);
-        testMesh.Render(renderer);
-        axes.Render(renderer);
-        boundingBox.Render(renderer);
-
-        gfx_SwapDraw();
     }
     // end test code
-
-    while (os_GetCSC() != sk_Clear) {
-    }
 
     gfx_End();
     bp::Settings::CleanupSettings();
