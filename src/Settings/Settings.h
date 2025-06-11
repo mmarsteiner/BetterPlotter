@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Settings/SettingsManager.h>
-#include <Plot/Colors.h>
 #include <cmath>
 #include <debug.h>
 
@@ -23,14 +22,12 @@ enum PlotType3D {
 class Settings {
     static SettingsManager* rect2Sm;
     static SettingsManager* rect3Sm;
-    static SettingsManager* cpSm;
     static SettingsManager* cylSm;
     static SettingsManager* paraSm;
 
     public:
     static SettingsManager& GetRect2Settings() { return *rect2Sm; }
     static SettingsManager& GetRect3Settings() { return *rect3Sm; }
-    static SettingsManager& GetColorPlotSettings() { return *cpSm; }
     static SettingsManager& GetCylSettings() { return *cylSm; }
     static SettingsManager& GetParaSettings() { return *paraSm; }
 
@@ -39,7 +36,6 @@ class Settings {
     static void CleanupSettings() {
         delete rect2Sm;
         delete rect3Sm;
-        delete cpSm;
         delete cylSm;
         delete paraSm;
     }

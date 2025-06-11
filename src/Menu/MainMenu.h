@@ -9,7 +9,6 @@
 #include "MainMenuElements/MenuItemSubMenu.h"
 #include "MainMenuElements/Settings/MenuItem2DSettings.h"
 #include "MainMenuElements/Settings/MenuItem3DCartesianSettings.h"
-#include "MainMenuElements/Settings/MenuItem3DPlotColorSettings.h"
 #include "MainMenuElements/Settings/MenuItemCylSettings.h"
 #include "MainMenuElements/Settings/MenuItemParametricSettings.h"
 #include "Menu.h"
@@ -21,7 +20,6 @@ class MainMenu final : public Menu {
     MenuItem3DCartesianSettings menuItem3DCartesianSettings;
     MenuItemCylSettings menuItemCylSettings;
     MenuItemParametricSettings menuItemParametricSettings;
-    MenuItem3DPlotColorSettings menuItem3DPlotColorSettings;
     
     Menu settingsSelectionMenu{"Settings"};
     MenuItemSubMenu settingsSubMenu{settingsSelectionMenu};
@@ -30,7 +28,6 @@ class MainMenu final : public Menu {
     public:
     explicit MainMenu() : Menu("Better Plotter") {
         settingsSelectionMenu.AddMenuItem(menuItem2DSettings);
-        settingsSelectionMenu.AddMenuItem(menuItem3DPlotColorSettings);
         settingsSelectionMenu.AddMenuItem(menuItem3DCartesianSettings);
         settingsSelectionMenu.AddMenuItem(menuItemCylSettings);
         settingsSelectionMenu.AddMenuItem(menuItemParametricSettings);

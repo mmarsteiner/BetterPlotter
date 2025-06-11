@@ -3,7 +3,6 @@
 namespace bp {
     SettingsManager* Settings::rect2Sm = nullptr;
     SettingsManager* Settings::rect3Sm = nullptr;
-    SettingsManager* Settings::cpSm = nullptr;
     SettingsManager* Settings::cylSm = nullptr;
     SettingsManager* Settings::paraSm = nullptr;
 
@@ -41,25 +40,6 @@ namespace bp {
         rect3Sm = new SettingsManager("3D Plot Settings", SETTINGS_3D_RECT_APPVAR_NAME, &defaultRect3);
         while (!defaultRect3.IsEmpty()) {
             delete defaultRect3.RemoveLast();
-        }
-        List<Setting> defaultCP;
-        defaultCP.Add(SettingUInt::Create("Y1 Type", CARTESIAN));
-        defaultCP.Add(SettingUInt::Create("Y1 Color", BLUE));
-        defaultCP.Add(SettingUInt::Create("Y2 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y2 Color", RED));
-        defaultCP.Add(SettingUInt::Create("Y3 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y3 Color", 3));
-        defaultCP.Add(SettingUInt::Create("Y4 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y4 Color", 4));
-        defaultCP.Add(SettingUInt::Create("Y5 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y5 Color", 5));
-        defaultCP.Add(SettingUInt::Create("Y6 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y6 Color", 6));
-        defaultCP.Add(SettingUInt::Create("Y7 Type", OFF));
-        defaultCP.Add(SettingUInt::Create("Y7 Color", 0));
-        cpSm = new SettingsManager("Plot/Color Settings", SETTINGS_3D_PLOTS_APPVAR_NAME, &defaultCP);
-        while (!defaultCP.IsEmpty()) {
-            delete defaultCP.RemoveLast();
         }
         List<Setting> defaultCyl;
         defaultCyl.Add(SettingDouble::Create("Theta Min", 0.0));

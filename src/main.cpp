@@ -3,7 +3,6 @@
 //
 
 #include <Menu/MainMenu.h>
-#include <Plot/Colors.h>
 #include <Settings/Settings.h>
 #include <Graphics/Renderer.h>
 #include <Graphics/Axes.h>
