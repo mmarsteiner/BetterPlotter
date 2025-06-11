@@ -11,22 +11,30 @@ namespace tiparser {
 typedef double (*BinOpPtr)(double, double);
 typedef double (*UOpPtr)(double);
 
+enum ExpressionType {
+    EXP_TYPE_RECT, EXP_TYPE_CYL, EXP_TYPE_PARA, EXP_TYPE_ANY, EXP_TYPE_INCONSISTENT
+};
+
 // all instances of AST must be created with the new keyword
 struct AST {
     virtual ~AST() = default;
     virtual void dbgPrint() = 0;
     virtual double Eval(size_t numVars, const uint8_t* vars, const double* vals) const = 0;
+    virtual ExpressionType GetExpressionType() const = 0;
     static void InitOpPtrs();
 
     protected:
     static BinOpPtr binOps[256];
     static UOpPtr uOps[256];
 };
+
 struct AST_Triple_Expr : AST {  // so parametric equations can be typed as a comma separated list of 3 expressions
     AST* x;
     AST* y;
     AST* z;
+
     AST_Triple_Expr(AST* x, AST* y, AST* z) : x{x}, y{y}, z{z} {}
+
     void dbgPrint() override {
         x->dbgPrint();
         dbg_printf(", ");
@@ -34,25 +42,35 @@ struct AST_Triple_Expr : AST {  // so parametric equations can be typed as a com
         dbg_printf(", ");
         z->dbgPrint();
     }
+
     double Eval(size_t, const uint8_t*, const double*) const override {
         return 0.0 / 0.0;  // will return NaN because this is a triple expression
     }
+
     // out must be able to hold at least 3 values
     void TripleEval(size_t numVars, const uint8_t* vars, const double* vals, double* out) const {
         out[0] = x->Eval(numVars, vars, vals);
         out[1] = y->Eval(numVars, vars, vals);
         out[2] = z->Eval(numVars, vars, vals);
     }
+
+    ExpressionType GetExpressionType() const {
+        return EXP_TYPE_PARA;
+    }
 };
+
 struct ASTBinOp : AST {
     AST* left;
     AST* right;
     uint8_t op;
+
     ASTBinOp(AST* left, AST* right, uint8_t op) : left{left}, right{right}, op{op} {}
+
     ~ASTBinOp() override {
         delete left;
         delete right;
     }
+
     void dbgPrint() override {
         dbg_printf("0x%X(", op);
         if (left == nullptr) {
@@ -68,35 +86,64 @@ struct ASTBinOp : AST {
         }
         dbg_printf(")");
     }
+
     double Eval(size_t numVars, const uint8_t* vars, const double* vals) const override {
         double lVal = left->Eval(numVars, vars, vals);
         double rVal = right->Eval(numVars, vars, vals);
         return binOps[op](lVal, rVal);
     }
+
+    ExpressionType GetExpressionType() const {
+        ExpressionType leftType = left->GetExpressionType();
+        ExpressionType rightType = right->GetExpressionType();
+        if (leftType == EXP_TYPE_ANY) {
+            return rightType;
+        }
+        if (rightType == EXP_TYPE_ANY) {
+            return leftType;
+        }
+        if (rightType != leftType) {
+            return EXP_TYPE_INCONSISTENT;
+        }
+        return rightType;
+    }
 };
+
 struct ASTFunc : AST {
     AST* operand;
     uint8_t op;
+
     ASTFunc(uint8_t op, AST* operand) : operand{operand}, op{op} {}
+
     ~ASTFunc() override {
         delete operand;
     }
+
     void dbgPrint() override {
         dbg_printf("0x%X(", op);
         operand->dbgPrint();
         dbg_printf(")");
     }
+
     double Eval(size_t numVars, const uint8_t* vars, const double* vals) const override {
         double operandVal = operand->Eval(numVars, vars, vals);
         return uOps[op](operandVal);
     }
+
+    ExpressionType GetExpressionType() const {
+        return operand->GetExpressionType();
+    }
 };
+
 struct ASTVar : AST {
     uint8_t var;
+
     ASTVar(uint8_t code) : var{code} {}
+
     void dbgPrint() override {
         dbg_printf("0x%X", var);
     }
+
     double Eval(size_t numVars, const uint8_t* vars, const double* vals) const override {
         for (size_t i = 0; i < numVars; i++) {
             if (vars[i] == var) {
@@ -105,7 +152,23 @@ struct ASTVar : AST {
         }
         return 0.0 / 0.0;
     }
+
+    ExpressionType GetExpressionType() const {
+        switch (var) {
+            case OS_TOK_X:
+            case OS_TOK_Y:
+                return EXP_TYPE_RECT;
+            case OS_TOK_THETA:
+            case OS_TOK_Z:
+                return EXP_TYPE_CYL;
+            case OS_TOK_S:
+            case OS_TOK_T:
+                return EXP_TYPE_PARA;
+        }
+        return EXP_TYPE_INCONSISTENT;
+    }
 };
+
 struct ASTConst : AST {
     double val;
     ASTConst(double val) : val{val} {}
@@ -114,6 +177,9 @@ struct ASTConst : AST {
     }
     double Eval(size_t, const uint8_t*, const double*) const override {
         return val;
+    }
+    ExpressionType GetExpressionType() const {
+        return EXP_TYPE_ANY;
     }
 };
 }  // namespace tiparser
