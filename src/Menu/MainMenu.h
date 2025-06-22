@@ -5,35 +5,42 @@
 #pragma once
 
 #include "MainMenuElements/MenuItem2DImplicit.h"
-#include "MainMenuElements/MenuItemClose.h"
-#include "MainMenuElements/MenuItemSubMenu.h"
-#include "MainMenuElements/Settings/MenuItem2DSettings.h"
-#include "MainMenuElements/Settings/MenuItem3DCartesianSettings.h"
-#include "MainMenuElements/Settings/MenuItemParametricSettings.h"
+#include "MainMenuElements/MenuItemGeneric.h"
 #include "MainMenuElements/MenuItemPlot3D.h"
 #include "Menu.h"
 
 namespace bp {
 class MainMenu final : public Menu {
-    MenuItem2DSettings menuItem2DSettings;
     MenuItem2DImplicit menuItem2DImplicit;
-    MenuItem3DCartesianSettings menuItem3DCartesianSettings;
-    MenuItemParametricSettings menuItemParametricSettings;
-    
-    Menu settingsSelectionMenu{"Settings"};
-    MenuItemSubMenu settingsSubMenu{settingsSelectionMenu};
-    MenuItemClose menuItemClose;
-
     MenuItemPlot3D menuItemPlot3D;
 
+    MenuItemGeneric menuItem2DSettings;
+    MenuItemGeneric menuItem3DSettings;
+    MenuItemGeneric menuItemParaSettings;
+
+    MenuItemGeneric menuItemClose;
+
     public:
-    explicit MainMenu() : Menu("Better Plotter") {
-        settingsSelectionMenu.AddMenuItem(menuItem2DSettings);
-        settingsSelectionMenu.AddMenuItem(menuItem3DCartesianSettings);
-        settingsSelectionMenu.AddMenuItem(menuItemParametricSettings);
+    explicit MainMenu() : Menu("Better Plotter"), 
+        menuItem2DSettings("2D Plot Settings", []() {
+            Settings::GetRect2Settings().Open();
+            return false;
+        }),
+        menuItem3DSettings("3D Plot Settings", []() {
+            Settings::GetRect3Settings().Open();
+            return false;
+        }),
+        menuItemParaSettings("Parametric Settings", []() {
+            Settings::GetParaSettings().Open();
+            return false;
+        }),
+        menuItemClose("Close", []() { return true; }) {
+
         AddMenuItem(menuItem2DImplicit);
         AddMenuItem(menuItemPlot3D);
-        AddMenuItem(settingsSubMenu);
+        AddMenuItem(menuItem2DSettings);
+        AddMenuItem(menuItem3DSettings);
+        AddMenuItem(menuItemParaSettings);
         AddMenuItem(menuItemClose);
     }
 };

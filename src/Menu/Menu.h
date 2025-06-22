@@ -11,7 +11,6 @@
 #include <ti/getcsc.h>
 #include <ti/screen.h>
 
-#include "MainMenuElements/MenuItemClose.h"
 #include "MenuItem.h"
 
 namespace bp {
