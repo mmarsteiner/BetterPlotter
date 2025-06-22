@@ -17,7 +17,6 @@ class MenuItemPlot3D final : public MenuItem {
 
     public:
     bool Run() override {
-        os_ClrHomeFull();
         tiparser::Parser parser;
         tiparser::AST& func = *parser.Parse(OS_VAR_Y1);
         tiparser::ExpressionType type = func.GetExpressionType();
@@ -25,7 +24,14 @@ class MenuItemPlot3D final : public MenuItem {
             return false;
         }
 
+        os_ClrHomeFull();
+        gfx_Begin();
+        gfx_SetColor(CUSTOM_BLACK);
+        const char* loadingStr = "Loading...";
+        gfx_PrintStringXY(loadingStr, GFX_LCD_WIDTH / 2 - gfx_GetStringWidth(loadingStr) / 2, GFX_LCD_HEIGHT / 2 - 5);
+
         g3d::Renderer renderer;
+        renderer.Init3DColors();
         g3d::Axes axes;
         g3d::BoundingBox box;
         g3d::Mesh graphMesh;
@@ -71,9 +77,7 @@ class MenuItemPlot3D final : public MenuItem {
         graphMesh.UpdateColor(renderer);
 
         // actually draw the plot
-        gfx_Begin();
-        renderer.Init3DColors();
-
+        gfx_FillScreen(CUSTOM_WHITE);
         gfx_SetDrawBuffer();
         gfx_FillScreen(CUSTOM_WHITE);
         graphMesh.Render(renderer);
@@ -83,8 +87,8 @@ class MenuItemPlot3D final : public MenuItem {
 
         // process rotations
         uint8_t key;
-        int rotation = -67;
-        int elevation = 35;
+        int rotation = Settings::GetRect3Settings().GetDouble(bp::ROTATION_3);
+        int elevation = Settings::GetRect3Settings().GetDouble(bp::ELEVATION_3);
         while((key = os_GetCSC()) != sk_Clear) {
             if (key == sk_Left || key == sk_Right || key == sk_Up || key == sk_Down) {
                 if (key == sk_Left) {

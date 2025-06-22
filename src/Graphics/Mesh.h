@@ -161,8 +161,21 @@ public:
         if (firstElement == nullptr) {
             return; // no elements in the mesh--nothing to do
         }
-        double minZAttained = firstElement->world.z;
-        double maxZAttained = firstElement->world.z;
+        double minZAttained = 0;
+        double maxZAttained = 0;
+        // This loop bases the starting point for the z range on the first visible point
+        for (size_t i = 0; i < elements.Size(); ++i) {
+            auto& row = *elements.Get(i);
+            for (size_t j = 0; j < row.Size(); ++j) {
+                MeshElement& el = *row.Get(j);
+                if (el.visible) {
+                    minZAttained = el.world.z;
+                    maxZAttained = el.world.z;
+                    break;
+                }
+            }
+        }
+        // this loop actually goes through every visible element and expands the range as necessary
         for (size_t i = 0; i < elements.Size(); ++i) {
             auto& row = *elements.Get(i);
             for (size_t j = 0; j < row.Size(); ++j) {
