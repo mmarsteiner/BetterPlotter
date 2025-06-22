@@ -31,9 +31,9 @@ void List<E>::Add(E* element) {
 }
 
 template <typename E>
-Error List<E>::Add(size_t index, E* element) {
+void List<E>::Add(size_t index, E* element) {
     if (index < 0 || index > size) {
-        return ERR_IDX_OUT_OF_BOUNDS;
+        return;
     }
     EnsureCapacity();
     for (size_t i = size; i > index; --i) {
@@ -41,7 +41,6 @@ Error List<E>::Add(size_t index, E* element) {
     }
     data[index] = element;
     ++size;
-    return ERR_SUCCESS;
 }
 
 template <typename E>

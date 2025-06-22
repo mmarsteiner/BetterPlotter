@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "Error.h"
-
 #define INIT_SIZE 10
 
 namespace bp {
@@ -45,14 +43,13 @@ class List {
     void Add(E* element);
 
     /**
-     * Adds an element to the list at the given index
+     * Adds an element to the list at the given index. If the index is out of bounds, nothing will be done.
      *
      * @param index Index to add the element at
      * @param element Element to add to the list
      *
-     * @return Error code: either `ERR_SUCCESS` if the operation was successful or `ERR_IDX_OUT_OF_BOUNDS` if the provided index was out of bounds for the List
      */
-    Error Add(size_t index, E* element);
+    void Add(size_t index, E* element);
 
     /**
      * Adds all the provided elements to the list
