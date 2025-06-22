@@ -12,7 +12,7 @@ typedef double (*BinOpPtr)(double, double);
 typedef double (*UOpPtr)(double);
 
 enum ExpressionType {
-    EXP_TYPE_RECT, EXP_TYPE_CYL, EXP_TYPE_PARA, EXP_TYPE_ANY, EXP_TYPE_INCONSISTENT
+    EXP_TYPE_RECT, EXP_TYPE_PARA, EXP_TYPE_ANY, EXP_TYPE_INCONSISTENT
 };
 
 // all instances of AST must be created with the new keyword
@@ -54,7 +54,7 @@ struct AST_Triple_Expr : AST {  // so parametric equations can be typed as a com
         out[2] = z->Eval(numVars, vars, vals);
     }
 
-    ExpressionType GetExpressionType() const {
+    ExpressionType GetExpressionType() const override {
         return EXP_TYPE_PARA;
     }
 };
@@ -93,7 +93,7 @@ struct ASTBinOp : AST {
         return binOps[op](lVal, rVal);
     }
 
-    ExpressionType GetExpressionType() const {
+    ExpressionType GetExpressionType() const override {
         ExpressionType leftType = left->GetExpressionType();
         ExpressionType rightType = right->GetExpressionType();
         if (leftType == EXP_TYPE_ANY) {
@@ -130,7 +130,7 @@ struct ASTFunc : AST {
         return uOps[op](operandVal);
     }
 
-    ExpressionType GetExpressionType() const {
+    ExpressionType GetExpressionType() const override {
         return operand->GetExpressionType();
     }
 };
@@ -153,16 +153,13 @@ struct ASTVar : AST {
         return 0.0 / 0.0;
     }
 
-    ExpressionType GetExpressionType() const {
+    ExpressionType GetExpressionType() const override {
         switch (var) {
             case OS_TOK_X:
             case OS_TOK_Y:
                 return EXP_TYPE_RECT;
-            case OS_TOK_THETA:
-            case OS_TOK_Z:
-                return EXP_TYPE_CYL;
-            case OS_TOK_S:
-            case OS_TOK_T:
+            case OS_TOK_U:
+            case OS_TOK_V:
                 return EXP_TYPE_PARA;
         }
         return EXP_TYPE_INCONSISTENT;
@@ -178,7 +175,7 @@ struct ASTConst : AST {
     double Eval(size_t, const uint8_t*, const double*) const override {
         return val;
     }
-    ExpressionType GetExpressionType() const {
+    ExpressionType GetExpressionType() const override {
         return EXP_TYPE_ANY;
     }
 };

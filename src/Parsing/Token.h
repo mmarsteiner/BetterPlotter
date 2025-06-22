@@ -106,10 +106,8 @@ struct Token {
         tokenTypes[OS_TOK_PI] = TT_CONST;
         tokenTypes[OS_TOK_X] = TT_VAR;
         tokenTypes[OS_TOK_Y] = TT_VAR;
-        tokenTypes[OS_TOK_Z] = TT_VAR;
-        tokenTypes[OS_TOK_S] = TT_VAR;
-        tokenTypes[OS_TOK_T] = TT_VAR;
-        tokenTypes[OS_TOK_THETA] = TT_VAR;
+        tokenTypes[OS_TOK_U] = TT_VAR;
+        tokenTypes[OS_TOK_V] = TT_VAR;
         tokenTypes[OS_TOK_LN] = TT_FUNC;
         tokenTypes[OS_TOK_EXP] = TT_FUNC;
         tokenTypes[OS_TOK_LOG] = TT_FUNC;
