@@ -33,9 +33,6 @@ namespace bp {
         defaultRect3.Add(SettingDouble::Create("yStep", 0.5));
         defaultRect3.Add(SettingDouble::Create("Elevation", 35.26));
         defaultRect3.Add(SettingDouble::Create("Rotation", -67.5));
-        defaultRect3.Add(SettingBool::Create("Draw Contour Lines", true));
-        defaultRect3.Add(SettingBool::Create("Shade Surface", true));
-        defaultRect3.Add(SettingBool::Create("Draw Outer Box", true));
         rect3Sm = new SettingsManager("3D Plot Settings", SETTINGS_3D_RECT_APPVAR_NAME, &defaultRect3);
         while (!defaultRect3.IsEmpty()) {
             delete defaultRect3.RemoveLast();

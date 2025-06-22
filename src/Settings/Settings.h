@@ -62,10 +62,7 @@ typedef enum {
     XSTEP_3,
     YSTEP_3,
     ELEVATION_3,
-    ROTATION_3,
-    DRAW_CONTOUR_LINES,
-    SHADE_SURFACE,
-    DRAW_OUTER_BOX
+    ROTATION_3
 } Setting3RID;
 
 typedef enum { 
